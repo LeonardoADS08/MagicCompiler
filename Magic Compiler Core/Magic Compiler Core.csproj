@@ -6,7 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\lexicalRegex.mc" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Forge API\Forge API.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\lexicalRegex.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

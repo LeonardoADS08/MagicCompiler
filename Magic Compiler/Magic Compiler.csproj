@@ -6,4 +6,19 @@
     <RootNamespace>MCRun</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="testFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="testFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Forge API\Forge API.csproj" />
+    <ProjectReference Include="..\Magic Compiler Core\Magic Compiler Core.csproj" />
+  </ItemGroup>
+
 </Project>
