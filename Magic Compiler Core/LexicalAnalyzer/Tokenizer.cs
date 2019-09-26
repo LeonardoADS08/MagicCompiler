@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace MagicCompiler.LexicalAnalyzer
 {
-    public class Tokenizer
+    internal class Tokenizer
     {
         private List<Symbol> _reservedWords;
         private List<Symbol> _regex;

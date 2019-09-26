@@ -16,6 +16,7 @@ namespace Magic_Compiler
             {
                 Console.WriteLine(lexer.Tokens[i].Lexeme + " - " + lexer.Tokens[i].Symbol.Type);
             }
+
             Console.ReadKey();
         }
 

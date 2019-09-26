@@ -9,7 +9,6 @@ namespace MagicCompiler.LexicalAnalyzer
         public string Type { get; set; }
         public string Pattern { get; set; }
 
-
         public Symbol(string type, string pattern)
         {
             Type = type;
