@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MagicCompiler.LexicalAnalyzer
+namespace MagicCompiler.Lexical
 {
     public struct Token
     {

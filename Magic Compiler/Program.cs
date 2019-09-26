@@ -1,5 +1,6 @@
-﻿using MagicCompiler.LexicalAnalyzer;
+﻿using MagicCompiler.Lexical;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -9,16 +10,9 @@ namespace Magic_Compiler
     {
         static void Main(string[] args)
         {
-            Lexer lexer = new Lexer();
-            lexer.Tokenize();
-            
-            for (int i = 0; i < lexer.Tokens.Count; i++)
-            {
-                Console.WriteLine(lexer.Tokens[i].Lexeme + " - " + lexer.Tokens[i].Symbol.Type);
-            }
-
+            Lexer lexer = new Lexer(@"Data\input.txt");
+            lexer.Analyze();
             Console.ReadKey();
         }
-
     }
 }

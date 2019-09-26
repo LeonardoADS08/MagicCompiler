@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MagicCompiler.LexicalAnalyzer
+namespace MagicCompiler.Lexical
 {
     public class Lexer
     {
         public List<Token> Tokens = new List<Token>();
 
         private string _input;
-        private Tokenizer _patternRepo = new Tokenizer();
+        private Tokenizer _tokenizer = new Tokenizer();
 
         private const string FILE_DIRECTION_INPUT = @"Data\input.txt";
 
@@ -18,11 +18,19 @@ namespace MagicCompiler.LexicalAnalyzer
         {
             using (var reader = new StreamReader(FILE_DIRECTION_INPUT))
             {
-                _input = reader.ReadToEnd();
+                _input = reader.ReadToEnd().Trim();
             }
         }
 
-        public void Tokenize()
+        public Lexer(string fileDirection)
+        {
+            using (var reader = new StreamReader(fileDirection))
+            {
+                _input = reader.ReadToEnd().Trim();
+            }
+        }
+
+        public void Analyze()
         {
             string word = string.Empty, tempWord;
             
@@ -34,12 +42,12 @@ namespace MagicCompiler.LexicalAnalyzer
                 if (i + 1 < _input.Length)
                 {
                     tempWord = word + _input[i + 1];
-                    if (_input[i + 1].ToString() != Environment.NewLine && _patternRepo.MatchToken(tempWord).Valid)
+                    if (_input[i + 1].ToString() != Environment.NewLine && _tokenizer.MatchToken(tempWord).Valid)
                         continue;
                 }
 
                 // Si no existen más posibilidades de tokens:
-                Tokens.Add(_patternRepo.MatchToken(word.Trim()).Token);
+                Tokens.Add(_tokenizer.MatchToken(word.Trim()).Token);
                 word = string.Empty;
             }
         }

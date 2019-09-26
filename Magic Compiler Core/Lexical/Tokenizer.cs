@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MagicCompiler.LexicalAnalyzer
+namespace MagicCompiler.Lexical
 {
     internal class Tokenizer
     {
