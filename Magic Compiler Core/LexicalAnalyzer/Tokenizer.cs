@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace MagicCompiler.LexicalAnalyzer
 {
-    public class PatternRepo
+    public class Tokenizer
     {
         private List<Symbol> _reservedWords;
         private List<Symbol> _regex;
@@ -15,7 +15,7 @@ namespace MagicCompiler.LexicalAnalyzer
         private const string FILE_DIRECTION_OPERATORS = @"Data\lexical_operators.txt";
         private const string FILE_DIRECTION_REGEX = @"Data\lexical_regex.txt";
 
-        public PatternRepo()
+        public Tokenizer()
         {
             _reservedWords = new List<Symbol>();
             _regex = new List<Symbol>();
@@ -50,7 +50,7 @@ namespace MagicCompiler.LexicalAnalyzer
             }
         }
 
-        public PatternRepoAnswer MatchToken(string word)
+        public TokenizerAnswer MatchToken(string word)
         {
             word = word.Trim();
 
@@ -58,7 +58,7 @@ namespace MagicCompiler.LexicalAnalyzer
             for (int symbolIndex = 0; symbolIndex < _reservedWords.Count; symbolIndex++)
             {
                 if (_reservedWords[symbolIndex].Pattern == word)
-                    return new PatternRepoAnswer(true, new Token(word, _reservedWords[symbolIndex]));
+                    return new TokenizerAnswer(true, new Token(word, _reservedWords[symbolIndex]));
             }
 
             // Regex
@@ -66,10 +66,10 @@ namespace MagicCompiler.LexicalAnalyzer
             {
                 Regex regex = new Regex(_regex[i].Pattern);
                 if (regex.IsMatch(word))
-                    return new PatternRepoAnswer(true, new Token(word, _regex[i]));
+                    return new TokenizerAnswer(true, new Token(word, _regex[i]));
             }
 
-            return PatternRepoAnswer.NULL_ANSWER;
+            return TokenizerAnswer.NULL_ANSWER;
         }
 
         #region Test

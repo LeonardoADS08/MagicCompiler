@@ -10,7 +10,7 @@ namespace MagicCompiler.LexicalAnalyzer
         public List<Token> Tokens = new List<Token>();
 
         private string _input;
-        private PatternRepo _patternRepo = new PatternRepo();
+        private Tokenizer _patternRepo = new Tokenizer();
 
         private const string FILE_DIRECTION_INPUT = @"Data\input.txt";
 
