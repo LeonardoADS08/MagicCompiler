@@ -9,23 +9,15 @@ namespace Magic_Compiler
     {
         static void Main(string[] args)
         {
-            Test();
+            Lexer lexer = new Lexer();
+            lexer.Tokenize();
+            
+            for (int i = 0; i < lexer.Tokens.Count; i++)
+            {
+                Console.WriteLine(lexer.Tokens[i].Lexeme + " - " + lexer.Tokens[i].Symbol.Type);
+            }
             Console.ReadKey();
         }
 
-        private static async void Test()
-        {
-            var sr = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + @"testFile.txt");
-            var text = await sr.ReadToEndAsync();
-            var words = text.Split(' ');
-
-            while (!RegexDictionary.Instance.IsReady) await Task.Delay(50);
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                var token = RegexDictionary.Instance.Tokenize(words[i]);
-                Console.WriteLine(token.Lexeme + " - " + token.Value);
-            }
-        }
     }
 }

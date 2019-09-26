@@ -1,0 +1,26 @@
+﻿function sistemaSolar
+shading interp
+colormap copper
+axis off
+lightangle(60,45) 
+colormap copper
+ for ang = 0:1:360
+  dibujaCircuferencia(5,0,0,0)
+  hold on
+  dibujaCircuferencia(1,9,0,ang)
+  axis([-11 11 -11 11]);
+  hold off
+  pause(0.1)
+ end
+end
+
+function dibujaCircuferencia(radio,centrox,centroy,angulo)
+
+ a = 0:0.1:2*pi;
+ x = cos(a)*radio + centrox;
+ y = sin(a)*radio + centroy;
+ xrotado = x*cosd(angulo) - y*sind(angulo);
+ yrotado = x*sind(angulo) + y*cosd(angulo);
+ plot(xrotado, yrotado,'black -')
+end
+

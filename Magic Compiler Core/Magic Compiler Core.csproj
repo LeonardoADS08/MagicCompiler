@@ -6,15 +6,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\lexicalRegex.mc" />
+    <None Remove="Data\input.txt" />
+    <None Remove="Data\lexical_keywords.txt" />
+    <None Remove="Data\lexical_operators.txt" />
+    <None Remove="Data\lexical_regex.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Forge API\Forge API.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\lexicalRegex.mc">
+    <Content Include="Data\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\lexical_keywords.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\lexical_operators.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\lexical_regex.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -6,15 +6,19 @@ namespace MagicCompiler.LexicalAnalyzer
 {
     public struct Token
     {
-        public static Token INVALID_TOKEN => new Token("[NULL]", "[NULL]");
+        private readonly static Token _nullInstance = new Token("[NULL]", new Symbol(INVALID_TYPE, "[NULL]"));
+        public static Token NULL_TOKEN => _nullInstance;
 
-        public string Lexeme;
-        public string Value;
+        public const string INVALID_TYPE = "INVALID";
 
-        public Token(string lexeme, string value)
+
+        public string Lexeme { get; set; }
+        public Symbol Symbol { get; set; }
+
+        public Token(string lexeme, Symbol symbol)
         {
             Lexeme = lexeme;
-            Value = value;
+            Symbol = symbol;
         }
     }
 }
