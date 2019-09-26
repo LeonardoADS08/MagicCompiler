@@ -1,3 +1,3 @@
 ﻿Identifier - ^\b(\w*[A-Z]|[a-z]\w*)\b$
-Numeric - ^[+]?([.]\d+|\d+[.]?\d*)$
+Numeric - ^([.]\d+|\d+[.]?\d*)$
 String - ^(\"\w+\")+$
