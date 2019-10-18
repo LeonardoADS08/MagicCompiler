@@ -1,4 +1,5 @@
-﻿using MagicCompiler.Lexical;
+﻿using MagicCompiler.Grammar;
+using MagicCompiler.Lexical;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +13,10 @@ namespace Magic_Compiler
         {
             Lexer lexer = new Lexer(@"Data\input.txt");
             lexer.Analyze();
+
+            Reader reader = new Reader();
+            reader.Build();
+
             Console.ReadKey();
         }
     }

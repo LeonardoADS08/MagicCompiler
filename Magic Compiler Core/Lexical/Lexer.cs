@@ -11,6 +11,7 @@ namespace MagicCompiler.Lexical
 
         private string _input;
         private Tokenizer _tokenizer = new Tokenizer();
+        private Action<Token> _actionPipeline;
 
         private const string FILE_DIRECTION_INPUT = @"Data\input.txt";
 
@@ -30,6 +31,8 @@ namespace MagicCompiler.Lexical
             }
         }
 
+        public void SetActionPipeline(Action<Token> action) => _actionPipeline = action;
+
         public void Analyze()
         {
             string word = string.Empty, tempWord;
@@ -47,10 +50,11 @@ namespace MagicCompiler.Lexical
                 }
 
                 // Si no existen más posibilidades de tokens:
-                Tokens.Add(_tokenizer.MatchToken(word.Trim()).Token);
+                var token = _tokenizer.MatchToken(word.Trim()).Token;
+                Tokens.Add(token);
+                _actionPipeline?.Invoke(token);
                 word = string.Empty;
             }
         }
-
     }
 }
