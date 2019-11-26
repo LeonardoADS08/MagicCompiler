@@ -1,6 +1,8 @@
 ﻿using MagicCompiler.Grammar;
 using MagicCompiler.Lexical;
+using MagicCompiler.Automaton;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -14,8 +16,7 @@ namespace Magic_Compiler
             Lexer lexer = new Lexer(@"Data\input.txt");
             lexer.Analyze();
 
-            Reader reader = new Reader();
-            reader.Build();
+            AutomatonBuilder automatonBuilder = new AutomatonBuilder();
 
             Console.ReadKey();
         }

@@ -13,7 +13,7 @@ namespace MagicCompiler.Lexical
         private Tokenizer _tokenizer = new Tokenizer();
         private Action<Token> _actionPipeline;
 
-        private const string FILE_DIRECTION_INPUT = @"Data\input.txt";
+        private const string FILE_DIRECTION_INPUT = @"..\Data\input.txt";
 
         public Lexer()
         {

@@ -14,6 +14,5 @@ namespace MagicCompiler.Grammar
     {
         public CFGConfig Configuration;
         public List<Rule> Productions = new List<Rule>();
-
     }
 }

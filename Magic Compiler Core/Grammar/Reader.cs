@@ -67,7 +67,7 @@ namespace MagicCompiler.Grammar
             for (int i = 0; i < _rawRules.Count; i++)
             {
                 List<string> leftRight = new List<string>(_rawRules[i].Split("::="));
-                string left = leftRight[0];
+                string left = leftRight[0].Trim(); // added trim because it was reading an extra space char
 
                 List<string> right = new List<string>(leftRight[1].Split("|"));
                 for (int j = 0; j < right.Count; j++)
