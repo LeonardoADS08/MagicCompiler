@@ -122,9 +122,6 @@ namespace MagicCompiler.Automaton
 
             return items;
         }
-
-        private bool 
-
         private HashSet<Item> Closure(HashSet<Item> I)
         {
             HashSet<Item> closure = new HashSet<Item>(I);
@@ -144,7 +141,6 @@ namespace MagicCompiler.Automaton
                             {
                                 added = true;
                                 Item aux = new Item();
-                                closure.Add()
                             }
                         }
                     }
