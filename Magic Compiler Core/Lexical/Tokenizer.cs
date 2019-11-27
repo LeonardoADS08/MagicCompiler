@@ -11,9 +11,9 @@ namespace MagicCompiler.Lexical
         private List<Symbol> _reservedWords;
         private List<Symbol> _regex;
 
-        private string FILE_DIRECTION_KEYWORDS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\lexical_keywords.txt");
-        private string FILE_DIRECTION_OPERATORS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\lexical_operators.txt");
-        private string FILE_DIRECTION_REGEX => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\lexical_regex.txt");
+        private string FILE_DIRECTION_KEYWORDS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/lexical_keywords.txt");
+        private string FILE_DIRECTION_OPERATORS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/lexical_operators.txt");
+        private string FILE_DIRECTION_REGEX => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/lexical_regex.txt");
 
         public Tokenizer()
         {

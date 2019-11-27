@@ -37,8 +37,8 @@ namespace MagicCompiler.Grammar
     */
     public class Reader
     {
-        private const string FILE_DIRECTION_GRAMMAR_RULES = @"Data\grammar_rules.txt";
-        private const string FILE_DIRECTION_GRAMMAR_CONFIGURATIONS = @"Data\grammar_config.json";
+        private string FILE_DIRECTION_GRAMMAR_RULES => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/grammar_rules.txt");
+        private string FILE_DIRECTION_GRAMMAR_CONFIGURATIONS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/grammar_config.json");
 
         private List<string> _rawRules = new List<string>();
         private CFGConfig _config;

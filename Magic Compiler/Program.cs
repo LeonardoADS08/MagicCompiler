@@ -13,12 +13,12 @@ namespace Magic_Compiler
     {
         static void Main(string[] args)
         {
-            Lexer lexer = new Lexer(@"Data\input.txt");
+            Lexer lexer = new Lexer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/input.txt"));
             lexer.Analyze();
 
             AutomatonBuilder automatonBuilder = new AutomatonBuilder();
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
