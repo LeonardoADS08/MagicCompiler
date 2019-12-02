@@ -4,9 +4,11 @@ using System.Text;
 
 namespace MagicCompiler.Automaton
 {
-    public class Clousure
+    public class Closure
     {
         public List<Item> Items = new List<Item>();
-        public Dictionary<string, Clousure> Goto = new Dictionary<string, Clousure>();
+        public Dictionary<string, Closure> Goto = new Dictionary<string, Closure>();
+
+
     }
 }

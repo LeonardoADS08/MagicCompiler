@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>MagicCompiler</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Automaton\NewFile1.txt" />
     <None Remove="Data\grammar_config.json" />
     <None Remove="Data\grammar_rules.txt" />
     <None Remove="Data\input.txt" />
