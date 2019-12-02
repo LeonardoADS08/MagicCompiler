@@ -55,6 +55,7 @@ namespace MagicCompiler.Grammar
             {
                 string config = reader.ReadToEnd().Trim();
                 _config = Newtonsoft.Json.JsonConvert.DeserializeObject<CFGConfig>(config);
+                _config.StartSymbol = _config.StartSymbol.ToLower();
             }
 
         }
