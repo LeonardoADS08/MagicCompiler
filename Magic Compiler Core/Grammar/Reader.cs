@@ -41,7 +41,7 @@ namespace MagicCompiler.Grammar
         private string FILE_DIRECTION_GRAMMAR_CONFIGURATIONS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/grammar_config.json");
 
         private List<string> _rawRules = new List<string>();
-        private CFGConfig _config;
+        private dynamic _config;
 
         public Reader()
         {
@@ -54,32 +54,36 @@ namespace MagicCompiler.Grammar
             using (var reader = new StreamReader(FILE_DIRECTION_GRAMMAR_CONFIGURATIONS))
             {
                 string config = reader.ReadToEnd().Trim();
-                _config = Newtonsoft.Json.JsonConvert.DeserializeObject<CFGConfig>(config);
-                _config.StartSymbol = _config.StartSymbol.ToLower();
-            }
-
+                _config = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(config);
+            } 
         }
 
         public CFG Build()
         {
             var cfg = new CFG();
-
-            cfg.Configuration = _config;
+            cfg.Configuration = new CFGConfig() { AugmentedGrammar = StringToRule((string)_config.AugmentedGrammar)[0] };
             for (int i = 0; i < _rawRules.Count; i++)
             {
-                List<string> leftRight = new List<string>(_rawRules[i].Split("::="));
-                string left = leftRight[0].Trim(); // added trim because it was reading an extra space char
-
-                List<string> right = new List<string>(leftRight[1].Split("|"));
-                for (int j = 0; j < right.Count; j++)
-                {
-                    Rule duaLipaNewRule = new Rule() { Left = left };
-                    duaLipaNewRule.Right.AddRange(right[j].Trim().Split(" "));
-                    cfg.Productions.Add(duaLipaNewRule);
-                }
+                cfg.Productions.AddRange(StringToRule(_rawRules[i]));
             }
-
             return cfg;
+        }
+
+        private List<Rule> StringToRule(string rule)
+        {
+            rule = rule.ToLower();
+            List<Rule> result = new List<Rule>();
+            List<string> leftRight = new List<string>(rule.Split("::="));
+            string left = leftRight[0].Trim(); // added trim because it was reading an extra space char
+
+            List<string> right = new List<string>(leftRight[1].Split("|"));
+            for (int j = 0; j < right.Count; j++)
+            {
+                Rule duaLipaNewRule = new Rule() { Left = left };
+                duaLipaNewRule.Right.AddRange(right[j].Trim().Split(" "));
+                result.Add(duaLipaNewRule);
+            }
+            return result;
         }
     }
 }

@@ -8,6 +8,8 @@ namespace MagicCompiler.Automaton
 {
     public class AutomatonBuilder
     {
+        public State InitialState;
+
         private List<Item> ProductionItems;
         private CFG KGrammar;
         private Rule StartingProduction;
@@ -21,38 +23,26 @@ namespace MagicCompiler.Automaton
             ProductionItems = new List<Item>();
             Reader reader = new Reader();
             KGrammar = reader.Build();
-            Build();
-
-            var spItem = ProductionItems.FindAll(x => x.Production == StartingProduction && x.DotPosition == 0).ToList();
-            BuildStates(spItem, new List<State>());
-           // PrintAllItems();
-           //             var result = Closure(spItem);
-           //             Console.WriteLine();
-           //             result.ForEach(x => x.PrintItem());
-           //             Console.WriteLine();
-           //             result = NextDotItems(result);
-           //             result.ForEach(x => x.PrintItem());
-           //             Console.WriteLine();
-           //             result = NextStateValidItems("e", result);
-           //             result.ForEach(x => x.PrintItem());
-           //var result = BuildStates(spItem, new List<Item>());
-           //result.PrintState();
-
         }
 
         public void Build()
         {
             ExtendGrammar();
             KGrammar.Productions.ForEach(x => ComputeItems(x));
+            var spItem = ProductionItems.FindAll(x => x.Production == StartingProduction && x.DotPosition == 0).ToList();
+            InitialState = BuildStates(spItem, new List<List<Item>>());
+            int order = 0;
+            BFS(x =>
+            {
+                x.Order = order;
+                x.PrintState();
+                order++;
+            });
         }
 
         private void ExtendGrammar()
         {
-            StartingProduction = new Rule
-            {
-                Left = "$accepted",
-                Right = { KGrammar.Configuration.StartSymbol }
-            };
+            StartingProduction = KGrammar.Configuration.AugmentedGrammar;
             KGrammar.Productions.Add(StartingProduction);
         }
 
@@ -157,9 +147,7 @@ namespace MagicCompiler.Automaton
             return null;
         }
 
-        private List<List<Item>> analyzedItems = new List<List<Item>>();
-        private int StateCount = 0;
-        private State BuildStates(List<Item> currentItems, List<State> states)
+        private State BuildStates(List<Item> currentItems, List<List<Item>> analyzedItems)
         {
             for (int i = 0; i < analyzedItems.Count; i++)
             {
@@ -172,9 +160,6 @@ namespace MagicCompiler.Automaton
             }
             analyzedItems.Add(currentItems);
 
-            int stateOrderHere = StateCount;
-            StateCount++;
-
             List<Item> closure = new List<Item>();
             currentItems.ForEach(x => closure.AddRange(Closure(x)));
 
@@ -185,21 +170,40 @@ namespace MagicCompiler.Automaton
             var groupsGoto = GroupGoto(closureAndItems);
             foreach (var val in groupsGoto)
             {
-                var resultState = BuildStates(val.Value, states);
+                var resultState = BuildStates(val.Value, analyzedItems);
                 if (resultState != null) GotoStates.Add(resultState);
             }
 
             State actualState = new State()
             {
-                Order = stateOrderHere,
                 CurrentItems = currentItems,
                 Closure = closure,
                 Goto = GotoStates
             };
-            actualState.PrintState();
-            states.Add(actualState);
 
             return actualState;
+        }
+
+        public void BFS(Action<State> action)
+        {
+            Queue<State> queue = new Queue<State>();
+            HashSet<State> visitedStates = new HashSet<State>();
+            queue.Enqueue(InitialState);
+            while (queue.Count != 0)
+            {
+                var actualState = queue.Dequeue();
+
+                if (visitedStates.Contains(actualState)) continue;
+                else visitedStates.Add(actualState);
+
+                // Execute action
+                action?.Invoke(actualState);
+
+                for (int i = 0; i < actualState.Goto.Count; i++)
+                {
+                    queue.Enqueue(actualState.Goto[i]);
+                }
+            }
         }
 
         #region Tests

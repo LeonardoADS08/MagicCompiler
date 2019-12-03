@@ -17,6 +17,7 @@ namespace Magic_Compiler
             lexer.Analyze();
 
             AutomatonBuilder automatonBuilder = new AutomatonBuilder();
+            automatonBuilder.Build();
             //automatonBuilder.PrintAllItems();
             //Console.ReadKey();
         }

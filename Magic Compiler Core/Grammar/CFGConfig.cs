@@ -6,6 +6,6 @@ namespace MagicCompiler.Grammar
 {
     public class CFGConfig
     {
-        public string StartSymbol { get; set; }
+        public Rule AugmentedGrammar { get; set; }
     }
 }
