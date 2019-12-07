@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using MagicCompiler.Syntactic;
 
 namespace Magic_Compiler
 {
@@ -16,10 +17,8 @@ namespace Magic_Compiler
             Lexer lexer = new Lexer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/input.txt"));
             lexer.Analyze();
 
-            AutomatonBuilder automatonBuilder = new AutomatonBuilder();
-            automatonBuilder.Build();
-            //automatonBuilder.PrintAllItems();
-            //Console.ReadKey();
+            ParsingTable pt = new ParsingTable();
+            pt.PrintTable();
         }
     }
 }

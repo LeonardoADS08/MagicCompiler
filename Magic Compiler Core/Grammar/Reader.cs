@@ -61,7 +61,12 @@ namespace MagicCompiler.Grammar
         public CFG Build()
         {
             var cfg = new CFG();
-            cfg.Configuration = new CFGConfig() { AugmentedGrammar = StringToRule((string)_config.AugmentedGrammar)[0] };
+            cfg.Configuration = new CFGConfig() 
+            { 
+                AugmentedGrammar = StringToRule((string)_config.AugmentedGrammar)[0], 
+                Epsilon = _config.EpsilonSymbol
+            };
+
             for (int i = 0; i < _rawRules.Count; i++)
             {
                 cfg.Productions.AddRange(StringToRule(_rawRules[i]));

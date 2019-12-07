@@ -9,18 +9,17 @@ namespace MagicCompiler.Automaton
     public class AutomatonBuilder
     {
         public State InitialState;
+        public CFG KGrammar;
 
-        private List<Item> ProductionItems;
-        private CFG KGrammar;
-        private Rule StartingProduction;
+        private List<Item> _productionItems;
+        private Rule _startingProduction;
 
-        private List<Item> NonKernelItems => ProductionItems.Where(x => x.DotPosition == 0 && x.Production != StartingProduction).ToList();
-        private List<Item> KernelItems => ProductionItems.Where(x => x.DotPosition != 0 || x.Production == StartingProduction).ToList();
-        private List<Item> AugmentedItems => ProductionItems.Where(x => x.Production == StartingProduction).ToList();
+        private List<Item> NonKernelItems => _productionItems.Where(x => x.DotPosition == 0 && x.Production != _startingProduction).ToList();
+        private List<Item> KernelItems => _productionItems.Where(x => x.DotPosition != 0 || x.Production == _startingProduction).ToList();
 
         public AutomatonBuilder()
         {
-            ProductionItems = new List<Item>();
+            _productionItems = new List<Item>();
             Reader reader = new Reader();
             KGrammar = reader.Build();
         }
@@ -29,24 +28,21 @@ namespace MagicCompiler.Automaton
         {
             ExtendGrammar();
             KGrammar.Productions.ForEach(x => ComputeItems(x));
-            var spItem = ProductionItems.FindAll(x => x.Production == StartingProduction && x.DotPosition == 0).ToList();
-            InitialState = BuildStates(spItem, new List<List<Item>>());
+            var spItem = _productionItems.FindAll(x => x.Production == _startingProduction && x.DotPosition == 0).ToList();
+            InitialState = BuildStates(spItem, new List<State>());
             int order = 0;
             BFS(x =>
             {
                 x.Order = order;
-                x.PrintState();
                 order++;
             });
         }
 
         private void ExtendGrammar()
         {
-            StartingProduction = KGrammar.Configuration.AugmentedGrammar;
-            KGrammar.Productions.Add(StartingProduction);
+            _startingProduction = KGrammar.Configuration.AugmentedGrammar;
+            KGrammar.ExtendGrammar();
         }
-
-        private bool IsNonTerminal(string symbol) => KGrammar.Productions.Exists(x => x.Left == symbol);
 
         private void ComputeItems(Rule production)
         {
@@ -59,7 +55,7 @@ namespace MagicCompiler.Automaton
                     DotPosition = i
                 });
             }
-            ProductionItems.AddRange(items);
+            _productionItems.AddRange(items);
         }
 
         private List<Item> Closure(Item item)
@@ -101,7 +97,7 @@ namespace MagicCompiler.Automaton
         private List<Item> NextDotItems(List<Item> items)
         {
             List<Item> result = new List<Item>();
-            items.ForEach(x => result.AddRange(ProductionItems.Where(y => y.Production == x.Production && x.DotPosition + 1 == y.DotPosition)));
+            items.ForEach(x => result.AddRange(_productionItems.Where(y => y.Production == x.Production && x.DotPosition + 1 == y.DotPosition)));
             return result;
         }
         
@@ -147,18 +143,26 @@ namespace MagicCompiler.Automaton
             return null;
         }
 
-        private State BuildStates(List<Item> currentItems, List<List<Item>> analyzedItems)
+        private State BuildStates(List<Item> currentItems, List<State> states)
         {
-            for (int i = 0; i < analyzedItems.Count; i++)
+            for (int i = 0; i < states.Count; i++)
             {
                 bool exists = true;
-                for (int j = 0; exists && j < analyzedItems[i].Count; j++)
+                for (int j = 0; exists && j < states[i].CurrentItems.Count; j++)
                 {
-                    if (!currentItems.Contains(analyzedItems[i][j])) exists = false;
+                    if (!currentItems.Contains(states[i].CurrentItems[j]))
+                    {
+                        exists = false;
+                    }
                 }
-                if (exists) return null;
+                if (exists) return states[i];
             }
-            analyzedItems.Add(currentItems);
+
+            State actualState = new State()
+            {
+                CurrentItems = currentItems
+            };
+            states.Add(actualState);
 
             List<Item> closure = new List<Item>();
             currentItems.ForEach(x => closure.AddRange(Closure(x)));
@@ -166,20 +170,16 @@ namespace MagicCompiler.Automaton
             List<Item> closureAndItems = new List<Item>(closure);
             closureAndItems.AddRange(currentItems);
 
-            List<State> GotoStates = new List<State>();
+            Dictionary<string, State> GotoStates = new Dictionary<string, State>();
             var groupsGoto = GroupGoto(closureAndItems);
             foreach (var val in groupsGoto)
             {
-                var resultState = BuildStates(val.Value, analyzedItems);
-                if (resultState != null) GotoStates.Add(resultState);
+                var resultState = BuildStates(val.Value, states);
+                if (resultState != null) GotoStates.Add(val.Key, resultState);
             }
 
-            State actualState = new State()
-            {
-                CurrentItems = currentItems,
-                Closure = closure,
-                Goto = GotoStates
-            };
+            actualState.Closure = closure;
+            actualState.Goto = GotoStates;
 
             return actualState;
         }
@@ -199,9 +199,9 @@ namespace MagicCompiler.Automaton
                 // Execute action
                 action?.Invoke(actualState);
 
-                for (int i = 0; i < actualState.Goto.Count; i++)
+                foreach (var gotoState in actualState.Goto)
                 {
-                    queue.Enqueue(actualState.Goto[i]);
+                    queue.Enqueue(gotoState.Value);
                 }
             }
         }
@@ -209,7 +209,7 @@ namespace MagicCompiler.Automaton
         #region Tests
         public void PrintAllItems()
         {
-            foreach (var val in ProductionItems)
+            foreach (var val in _productionItems)
             {
                 val.PrintItem();
             }
@@ -226,6 +226,14 @@ namespace MagicCompiler.Automaton
                 var closure = Closure(y);
                 closure.ForEach(x => x.PrintItem());
                 Console.WriteLine();
+            });
+        }
+
+        public void PrintStates()
+        {
+            BFS(x =>
+            {
+                x.PrintState();
             });
         }
         #endregion

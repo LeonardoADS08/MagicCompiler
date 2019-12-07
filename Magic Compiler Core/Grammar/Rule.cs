@@ -10,14 +10,14 @@ namespace MagicCompiler.Grammar
         public List<string> Right = new List<string>();
 
         #region Tests
-        public void PrintRule()
+        public void PrintRule(bool newLine = true)
         {
             Console.Write(Left + " :== ");
             for (int i = 0; i < Right.Count; i++)
             {
                 Console.Write(Right[i] + " ");
             }
-            Console.WriteLine("");
+            if (newLine) Console.WriteLine("");
         }
         #endregion
     }
