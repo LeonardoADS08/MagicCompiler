@@ -18,7 +18,7 @@ namespace Magic_Compiler
             lexer.Analyze();
 
             ParsingTable pt = new ParsingTable();
-            pt.PrintTable();
+            //pt.PrintTable();
         }
     }
 }

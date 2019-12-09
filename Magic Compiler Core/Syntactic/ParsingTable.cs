@@ -18,6 +18,8 @@ namespace MagicCompiler.Syntactic
             {
                 Table.Add(new StateParser(x, automaton.KGrammar));
             });
+            automaton.KGrammar.PrintFirst();
+            automaton.KGrammar.PrintFollow();
         }
 
         #region Tests

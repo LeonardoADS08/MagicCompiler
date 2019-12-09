@@ -129,18 +129,28 @@ namespace MagicCompiler.Grammar
                 else if (IsNonTerminal(production.Right[i]))
                 {
                     var productionsStartinWith = Productions.Where(x => x.Left == production.Right[i]).ToList();
+                    bool haveEpsilon = false;
                     productionsStartinWith.ForEach(x =>
                     {
-                        result.AddRange(FirstOf(x, analyzedProductions));
+                        var firstOfResult = FirstOf(x, analyzedProductions);
+                        result.AddRange(firstOfResult);
+                        if (firstOfResult.Contains(Configuration.Epsilon)) haveEpsilon = true;
                     });
-                    break;
+
+                    if (!haveEpsilon) break;
                 }
-                else break;
+            }
+
+            // Accepted grammar doesn't have epsilon
+            if (production == Configuration.AugmentedGrammar)
+            {
+                result.RemoveAll(x => x == Configuration.Epsilon);
             }
 
             if (_first.ContainsKey(production.Left)) _first[production.Left].AddRange(result);
             else _first.Add(production.Left, result);
 
+            // TODO Improve this with hashsets
             _first[production.Left] = _first[production.Left].Distinct().ToList();
 
             return _first[production.Left];
@@ -154,9 +164,11 @@ namespace MagicCompiler.Grammar
             Productions.ForEach(x => CalculateFollowOf(x, analyzedProductions));
         }
 
-        // ref: https://www.youtube.com/watch?v=BSTBaPFxs3Q
+        // ref:  https://www.youtube.com/watch?v=BSTBaPFxs3Q
+        // ref2: https://www.youtube.com/watch?v=_uSlP91jmTM
         private List<string> CalculateFollowOf(Rule actualProduction, HashSet<Rule> analyzedProductions)
         {
+            if (actualProduction.Right[0] == Configuration.Epsilon) return new List<string>();
             if (analyzedProductions.Contains(actualProduction))
             {
                 if (_follow.ContainsKey(actualProduction.Left)) return _follow[actualProduction.Left];
@@ -165,10 +177,13 @@ namespace MagicCompiler.Grammar
             analyzedProductions.Add(actualProduction);
             List<string> result = new List<string>();
 
+            // case 1
             if (actualProduction == Configuration.AugmentedGrammar) 
                 result.Add(Configuration.AugmentedGrammar.Left);
 
             var productionsWith = Productions.Where(x => x.Right.Contains(actualProduction.Left)).ToList();
+            productionsWith.RemoveAll(p => p.Right[0] == Configuration.Epsilon);
+
             productionsWith.ForEach(production =>
             {
                 int occurence = production.Right.FindIndex(x => x == actualProduction.Left);
@@ -176,28 +191,45 @@ namespace MagicCompiler.Grammar
                 // case 3
                 if (occurence + 1 >= production.Right.Count)
                 {
-                    var productionsWith = Productions.Where(x => x.Left == production.Left).ToList();
-                    productionsWith.ForEach(p => result.AddRange(CalculateFollowOf(p, analyzedProductions)));
+                    var validProductions = Productions.Where(x => x.Left == production.Left).ToList();
+                    validProductions.ForEach(p => result.AddRange(CalculateFollowOf(p, analyzedProductions)));
                 }
                 else // case 3, 2
                 {
                     // case 2
-                    if (IsTerminal(production.Right[occurence + 1]))
-                    {
-                        result.Add(production.Right[occurence + 1]);
-                    }
+                    if (IsTerminal(production.Right[occurence + 1])) result.Add(production.Right[occurence + 1]);
                     else // case 3
                     {
                         result.AddRange(_first[production.Right[occurence + 1]]);
-                        var productionsWith = Productions.Where(x => x.Left == production.Right[occurence + 1]).ToList();
-                        productionsWith.ForEach(p => result.AddRange(CalculateFollowOf(p, analyzedProductions)));
+                        int count = 2;
+                        while (result.Contains(Configuration.Epsilon))
+                        {
+                            result.RemoveAll(p => p == Configuration.Epsilon);
+                            if (occurence + count >= production.Right.Count)
+                            {
+                                var validProductions = Productions.Where(x => x.Left == production.Left).ToList();
+                                validProductions.ForEach(p => result.AddRange(CalculateFollowOf(p, analyzedProductions)));
+                            }
+                            else
+                            {
+                                if (IsTerminal(production.Right[occurence + count])) result.Add(production.Right[occurence + count]);
+                                else
+                                {
+                                    result.AddRange(_first[production.Right[occurence + count]]);
+                                }
+                            }
+                            count++;
+                        }
                     }
                 }
             });
 
+            result.RemoveAll(x => x == Configuration.Epsilon);
+
             if (_follow.ContainsKey(actualProduction.Left)) _follow[actualProduction.Left].AddRange(result);
             else _follow.Add(actualProduction.Left, result);
 
+            // TODO Improve this with hashsets
             _follow[actualProduction.Left] = _follow[actualProduction.Left].Distinct().ToList();
 
             return result;
@@ -218,7 +250,7 @@ namespace MagicCompiler.Grammar
         {
             foreach (var val in Follow)
             {
-                Console.WriteLine("First of: " + val.Key);
+                Console.WriteLine("Follow of: " + val.Key);
                 val.Value.ForEach(x => Console.Write(x + " "));
                 Console.WriteLine();
             }
