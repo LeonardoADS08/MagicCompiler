@@ -15,10 +15,11 @@ namespace Magic_Compiler
         static void Main(string[] args)
         {
             Lexer lexer = new Lexer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/input.txt"));
-            lexer.Analyze();
+            //lexer.Analyze(x => x.PrintToken());
 
-            ParsingTable pt = new ParsingTable();
-            //pt.PrintTable();
+            Parser parser = new Parser(lexer);
+            lexer.Analyze();
+            parser.Check();
         }
     }
 }

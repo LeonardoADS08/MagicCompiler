@@ -1,3 +1,11 @@
-﻿E ::= E + T | T
-T ::= T * F | F
-F ::= ( E ) | id
+﻿SeqElementos ::= Valor , SeqElementos 
+SeqElementos ::= LlamadaFuncion , SeqElementos 
+SeqElementos ::= ID , SeqElementos 
+SeqElementos ::= Matriz , SeqElementos 
+SeqElementos ::= Valor
+SeqElementos ::= LlamadaFuncion
+SeqElementos ::= ID
+Fila ::= SeqElementos ; Fila
+Fila ::= SeqElementos ;
+Matriz ::= [ SeqElementos ]
+Matriz ::= [ SeqElementos ; Fila ]

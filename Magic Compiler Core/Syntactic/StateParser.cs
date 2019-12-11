@@ -68,7 +68,9 @@ namespace MagicCompiler.Syntactic
                 }
             });
 
-            KGrammar.Terminals.ForEach(symbol =>
+            var terminalsAndAccepted = new List<string>(KGrammar.Terminals);
+            terminalsAndAccepted.Add(KGrammar.Configuration.AugmentedGrammar.Left);
+            terminalsAndAccepted.ForEach(symbol =>
             {
                 if (!Action.ContainsKey(symbol))
                 {

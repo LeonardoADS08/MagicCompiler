@@ -15,6 +15,8 @@ namespace MagicCompiler.Lexical
         private string FILE_DIRECTION_OPERATORS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/lexical_operators.txt");
         private string FILE_DIRECTION_REGEX => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/lexical_regex.txt");
 
+        public const string TYPE_KEYWORD = "KEYWORD";
+
         public Tokenizer()
         {
             _reservedWords = new List<Symbol>();
@@ -24,7 +26,8 @@ namespace MagicCompiler.Lexical
             {
                 while (!reader.EndOfStream)
                 {
-                    _reservedWords.Add(new Symbol("Keyword", reader.ReadLine().Trim()));
+                    string input = reader.ReadLine().Trim().ToLower();
+                    _reservedWords.Add(new Symbol("Keyword", input, input));
                 }
             }
 
@@ -32,7 +35,8 @@ namespace MagicCompiler.Lexical
             {
                 while (!reader.EndOfStream)
                 {
-                    _reservedWords.Add(new Symbol("Operator", reader.ReadLine().Trim()));
+                    string input = reader.ReadLine().Trim().ToLower();
+                    _reservedWords.Add(new Symbol("Operator", input, input));
                 }
             }
 
@@ -40,11 +44,11 @@ namespace MagicCompiler.Lexical
             {
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    string line = reader.ReadLine().ToLower();
                     var rawSymbol = line.Split('-', 2);
                     if (rawSymbol.Length == 2)
                     {
-                        _regex.Add(new Symbol(rawSymbol[0].Trim(), rawSymbol[1].Trim()));
+                        _regex.Add(new Symbol(rawSymbol[0].Trim(), rawSymbol[1].Trim(), rawSymbol[0].Trim()));
                     }
                 }
             }

@@ -12,12 +12,19 @@ namespace MagicCompiler.Grammar
         #region Tests
         public void PrintRule(bool newLine = true)
         {
-            Console.Write(Left + " :== ");
+            Console.Write(Left + " ::= ");
             for (int i = 0; i < Right.Count; i++)
             {
                 Console.Write(Right[i] + " ");
             }
             if (newLine) Console.WriteLine("");
+        }
+
+        public string RuleToString()
+        {
+            var result = string.Format("{0} ::=", Left);
+            Right.ForEach(x => result += " " + x);
+            return result;
         }
         #endregion
     }

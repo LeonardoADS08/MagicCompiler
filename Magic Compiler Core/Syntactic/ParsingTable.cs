@@ -6,26 +6,27 @@ using System.Text;
 
 namespace MagicCompiler.Syntactic
 {
-    public class ParsingTable
+    public class ParsingTable : List<StateParser>
     {
-        public List<StateParser> Table = new List<StateParser>();
-
+        public State InitialState;
         public ParsingTable()
         {
             AutomatonBuilder automaton = new AutomatonBuilder();
             automaton.Build();
             automaton.BFS(x =>
             {
-                Table.Add(new StateParser(x, automaton.KGrammar));
+                this.Add(new StateParser(x, automaton.KGrammar));
             });
-            automaton.KGrammar.PrintFirst();
-            automaton.KGrammar.PrintFollow();
+            InitialState = automaton.InitialState;
         }
+
+        public StateParser StateParser(State state) => Find(x => x.State == state);
+
 
         #region Tests
         public void PrintTable()
         {
-            Table.ForEach(x => x.PrintStateParser());
+            this.ForEach(x => x.PrintStateParser());
         }
         #endregion
     }

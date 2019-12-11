@@ -21,7 +21,7 @@ namespace MagicCompiler.Automaton
         {
             _productionItems = new List<Item>();
             Reader reader = new Reader();
-            KGrammar = reader.Build();
+            KGrammar = CFG.Instance;
         }
 
         public void Build()

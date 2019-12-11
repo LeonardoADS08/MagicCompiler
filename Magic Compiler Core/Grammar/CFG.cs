@@ -13,6 +13,22 @@ namespace MagicCompiler.Grammar
     */
     public class CFG
     {
+        #region Singleton
+        private static CFG _instance;
+        public static CFG Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    Reader reader = new Reader();
+                    _instance = reader.Build();
+                }
+                return _instance;
+            }
+        }
+        #endregion
+
         public CFGConfig Configuration;
         public List<Rule> Productions = new List<Rule>();
 
@@ -63,7 +79,8 @@ namespace MagicCompiler.Grammar
 
         public void ExtendGrammar()
         {
-            Productions.Add(Configuration.AugmentedGrammar);
+            if (!Productions.Contains(Configuration.AugmentedGrammar))
+                Productions.Add(Configuration.AugmentedGrammar);
         }
 
         private void CategorizeSymbols()
@@ -83,7 +100,6 @@ namespace MagicCompiler.Grammar
 
             _nonTerminals = nonTerminalsHashSet.ToList();
             _terminals = symbols.ToList().Except(_nonTerminals).ToList();
-            _terminals.Add(Configuration.AugmentedGrammar.Left);
         }
 
         public bool IsTerminal(string symbol) => Terminals.Contains(symbol);
@@ -213,10 +229,7 @@ namespace MagicCompiler.Grammar
                             else
                             {
                                 if (IsTerminal(production.Right[occurence + count])) result.Add(production.Right[occurence + count]);
-                                else
-                                {
-                                    result.AddRange(_first[production.Right[occurence + count]]);
-                                }
+                                else result.AddRange(_first[production.Right[occurence + count]]);
                             }
                             count++;
                         }

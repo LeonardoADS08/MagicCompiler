@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicCompiler.Grammar;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,8 +12,7 @@ namespace MagicCompiler.Lexical
 
         private string _input;
         private Tokenizer _tokenizer = new Tokenizer();
-        private Action<Token> _actionPipeline;
-
+        private int _nextIterator = 0;
         private string FILE_DIRECTION_INPUT => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"/Data/input.txt");
 
         public Lexer()
@@ -31,9 +31,9 @@ namespace MagicCompiler.Lexical
             }
         }
 
-        public void SetActionPipeline(Action<Token> action) => _actionPipeline = action;
+        public void Analyze() => Analyze(null);
 
-        public void Analyze()
+        public void Analyze(Action<Token> action)
         {
             string word = string.Empty, tempWord;
             
@@ -52,9 +52,23 @@ namespace MagicCompiler.Lexical
                 // Si no existen más posibilidades de tokens:
                 var token = _tokenizer.MatchToken(word.Trim()).Token;
                 Tokens.Add(token);
-                _actionPipeline?.Invoke(token);
+                action?.Invoke(token);
                 word = string.Empty;
             }
+
+            var acceptedProduction = CFG.Instance.Configuration.AugmentedGrammar;
+            Tokens.Add(new Token(acceptedProduction.Left, new Symbol("Acceptation symbol", acceptedProduction.Left, acceptedProduction.Left)));
+        }
+
+        public Token Next()
+        {
+            if (_nextIterator + 1 < Tokens.Count)
+            {
+                var result = Tokens[_nextIterator];
+                _nextIterator++;
+                return result;
+            }
+            else return Tokens[_nextIterator];
         }
     }
 }
