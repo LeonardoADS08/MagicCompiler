@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using MagicCompiler.Syntactic;
+using MagicCompiler.Tools;
+using MCSI;
 
 namespace Magic_Compiler
 {
@@ -14,12 +16,14 @@ namespace Magic_Compiler
     {
         static void Main(string[] args)
         {
-            Lexer lexer = new Lexer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/input.txt"));
-            //lexer.Analyze(x => x.PrintToken());
 
-            Parser parser = new Parser(lexer);
-            lexer.Analyze();
+            Parser parser = new Parser();
             parser.Check();
+
+            ScriptEngine sc = new ScriptEngine("semanticScripts.txt");
+            var assembly = sc.Compile();
+            var instancia = assembly.CreateInstance<ISemanticAnalyzer>("MagicCompilerScripts.SemanticScript");
+            if (instancia.Analyze()) Console.WriteLine("WORKS!");
         }
     }
 }

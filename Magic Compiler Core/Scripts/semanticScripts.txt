@@ -1,0 +1,20 @@
+﻿using System;
+using MCSI;
+
+namespace MagicCompilerScripts
+{
+    class SemanticScript : ISemanticAnalyzer
+    {
+        public string test = "hello!";
+
+        public SemanticScript()
+        {
+        }   
+
+        public bool Analyze()
+        {
+            Console.WriteLine("SCRIPTS WORKING!!!");
+            return true;
+        }
+    }
+}

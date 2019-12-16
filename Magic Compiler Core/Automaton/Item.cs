@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MagicCompiler.Automaton
 {
-    public class Item
+    internal class Item
     {
         public Rule Production;
         public int DotPosition;

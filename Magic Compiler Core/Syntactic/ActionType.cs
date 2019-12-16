@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MagicCompiler.Syntactic
 {
-    public enum ActionType
+    internal enum ActionType
     {
         Shift, Reduce, Accept, Error
     }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MagicCompiler.Grammar
 {
-    public class Rule
+    internal class Rule
     {
         public string Left;
         public List<string> Right = new List<string>();

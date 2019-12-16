@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MagicCompiler.Syntactic
 {
-    public class StateParser
+    internal class StateParser
     {
         public State State;
         public Dictionary<string, Action> Action = new Dictionary<string, Action>();

@@ -35,7 +35,7 @@ namespace MagicCompiler.Grammar
 
         Cualquier otra forma sera digno de un error :)
     */
-    public class Reader
+    internal class Reader
     {
         private string FILE_DIRECTION_GRAMMAR_RULES => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/grammar_rules.txt");
         private string FILE_DIRECTION_GRAMMAR_CONFIGURATIONS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/grammar_config.json");

@@ -6,26 +6,18 @@ using System.Text;
 
 namespace MagicCompiler.Lexical
 {
-    public class Lexer
+    internal class Lexer
     {
         public List<Token> Tokens = new List<Token>();
 
         private string _input;
         private Tokenizer _tokenizer = new Tokenizer();
         private int _nextIterator = 0;
-        private string FILE_DIRECTION_INPUT => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"/Data/input.txt");
+        private string FILE_DIRECTION_INPUT => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/input.txt");
 
         public Lexer()
         {
             using (var reader = new StreamReader(FILE_DIRECTION_INPUT))
-            {
-                _input = reader.ReadToEnd().Trim();
-            }
-        }
-
-        public Lexer(string fileDirection)
-        {
-            using (var reader = new StreamReader(fileDirection))
             {
                 _input = reader.ReadToEnd().Trim();
             }

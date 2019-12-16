@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MagicCompiler.Automaton
 {
-    public class State
+    internal class State
     {
         public int Order;
         public List<Item> CurrentItems;

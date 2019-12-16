@@ -11,7 +11,7 @@ namespace MagicCompiler.Grammar
         P = Conjunto finito de producciones
         S ∈ Vn = Simbolo inicial
     */
-    public class CFG
+    internal class CFG
     {
         #region Singleton
         private static CFG _instance;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MagicCompiler.Lexical
 {
-    public struct Symbol
+    internal struct Symbol
     {
         public string Type { get; set; }
         public string Pattern { get; set; }

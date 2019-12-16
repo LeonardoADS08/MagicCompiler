@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MagicCompiler.Lexical
 {
-    public struct Token
+    internal struct Token
     {
         private readonly static Token _nullInstance = new Token("[NULL]", new Symbol(INVALID_TYPE, "[NULL]", "[NULL]"));
         public static Token NULL_TOKEN => _nullInstance;

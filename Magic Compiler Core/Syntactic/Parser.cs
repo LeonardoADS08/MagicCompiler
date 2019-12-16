@@ -1,6 +1,7 @@
 ﻿using MagicCompiler.Automaton;
 using MagicCompiler.Grammar;
 using MagicCompiler.Lexical;
+using MagicCompiler.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,98 +9,123 @@ using System.Text;
 
 namespace MagicCompiler.Syntactic
 {
-    public enum ParserState
-    {
-        Working, Error, OK
-    }
-
     public class Parser
     {
-        public ParserState State;
-
         private ParsingTable _parsingTable;
         private Lexer _lexer;
 
-        private Stack<State> _stateStack;
+        public bool DEBUG => bool.Parse(Resources.Debug);
 
-        public Parser(Lexer lexer)
+        public Parser()
         {
-            State = ParserState.Working;
-
             _parsingTable = new ParsingTable();
-            _stateStack = new Stack<State>();
-            _parsingTable.PrintTable();
-            _lexer = lexer;
+            _lexer = new Lexer();
+            _lexer.Analyze();
+
+            if (DEBUG) _parsingTable.PrintTable();
         }
+
+        private void DebugStack(Stack<State> stateStack)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("Stack : ");
+            var stack = stateStack.ToList();
+            stack.Reverse();
+            stack.ForEach(x => Console.Write(" " + x.Order));
+            Console.WriteLine();
+            Console.ResetColor();
+        }
+
+        private void DebugToken(Token token)
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Token : ");
+            token.PrintTokenForParser();
+            Console.ResetColor();
+        }
+
+        private void DebugAction(Action action, State state)
+        {
+            switch (action.Type)
+            {
+                case ActionType.Shift:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("Shift : " + action.Shift.Order);
+                    Console.ResetColor();
+                    break;
+                case ActionType.Reduce:
+                    if (state.Goto.ContainsKey(action.Reduce.Left))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("Reduce: ");
+                        action.Reduce.PrintRule(false);
+                        Console.WriteLine();
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Error on reduce!");
+                        Console.ResetColor();
+                    }
+                    break;
+                case ActionType.Accept:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Accepted by MagicCompiler");
+                    Console.ResetColor();
+                    break;
+                case ActionType.Error:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error!");
+                    Console.ResetColor();
+                    break;
+            }
+        }
+
 
         public void Check()
         {
+            Stack<State> stateStack = new Stack<State>();
             Token token = _lexer.Next();
-            _stateStack.Push(_parsingTable.InitialState);
+            stateStack.Push(_parsingTable.InitialState);
             bool finish = false;
             while (!finish)
             {
-                var state = _parsingTable.StateParser(_stateStack.Peek());
+                var state = _parsingTable.StateParser(stateStack.Peek());
 
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.Write("Stack : ");
-                var stack = _stateStack.ToList();
-                stack.Reverse();
-                stack.ForEach(x => Console.Write(" " + x.Order));
-                Console.WriteLine();
-                Console.ResetColor();
+                if (DEBUG) DebugStack(stateStack);
 
                 // Action
                 if (state.Action.ContainsKey(token.Symbol.TSymbol))
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write("Token : ");
-                    token.PrintTokenForParser();
-                    Console.ResetColor();
+                    if (DEBUG) DebugToken(token);
 
                     var action = state.Action[token.Symbol.TSymbol];
                     switch (action.Type)
                     {
                         case ActionType.Shift:
-                            _stateStack.Push(action.Shift);
+                            if (DEBUG) DebugAction(action, stateStack.Peek());
+                            stateStack.Push(action.Shift);
                             token = _lexer.Next();
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine("Shift : " + action.Shift.Order);
-                            Console.ResetColor();
                             break;
                         case ActionType.Reduce:
                             for (int i = 0; i < action.Reduce.Right.Count; i++)
-                                _stateStack.Pop();
-                            state = _parsingTable.StateParser(_stateStack.Peek());
+                                stateStack.Pop();
+                            state = _parsingTable.StateParser(stateStack.Peek());
+
+                            if (DEBUG) DebugAction(action, stateStack.Peek());
 
                             if (state.Goto.ContainsKey(action.Reduce.Left))
-                            {
-                                _stateStack.Push(state.Goto[action.Reduce.Left]);
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write("Reduce: ");
-                                action.Reduce.PrintRule(false);
-                                Console.WriteLine();
-                                Console.ResetColor();
-                            }
-                            else
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Error on reduce!");
-                                Console.ResetColor();
+                                stateStack.Push(state.Goto[action.Reduce.Left]);
+                            else 
                                 finish = true;
-                            }
-                            
                             break;
                         case ActionType.Accept:
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Accepted by MagicCompiler");
-                            Console.ResetColor();
+                            if (DEBUG) DebugAction(action, stateStack.Peek());
                             finish = true;
                             break;
                         case ActionType.Error:
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Error!");
-                            Console.ResetColor();
+                            if (DEBUG) DebugAction(action, stateStack.Peek());
                             finish = true;
                             break;
                     }
@@ -111,11 +137,9 @@ namespace MagicCompiler.Syntactic
                     Console.ResetColor();
                     finish = true;
                 }
-                Console.WriteLine();
             }
         }
 
-        private Token ProductionToToken(Rule production) => new Token(production.Left, new Symbol("Reduction", production.RuleToString(), production.Left));
-
+        
     }
 }

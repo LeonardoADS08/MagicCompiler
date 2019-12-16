@@ -6,7 +6,7 @@ using MagicCompiler.Grammar;
 
 namespace MagicCompiler.Automaton
 {
-    public class AutomatonBuilder
+    internal class AutomatonBuilder
     {
         public State InitialState;
         public CFG KGrammar;

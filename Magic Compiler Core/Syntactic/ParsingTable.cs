@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MagicCompiler.Syntactic
 {
-    public class ParsingTable : List<StateParser>
+    internal class ParsingTable : List<StateParser>
     {
         public State InitialState;
         public ParsingTable()
