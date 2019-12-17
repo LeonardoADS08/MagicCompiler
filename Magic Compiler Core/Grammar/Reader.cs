@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicCompiler.Structures.Grammar;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -43,6 +44,9 @@ namespace MagicCompiler.Grammar
         private List<string> _rawRules = new List<string>();
         private dynamic _config;
 
+        private const string RULE_LEFT_RIGHT_SEPARATOR = "::=";
+        private const string INLINE_RULE_SEPARATOR = "@@";
+
         public Reader()
         {
             using (var reader = new StreamReader(FILE_DIRECTION_GRAMMAR_RULES))
@@ -74,17 +78,17 @@ namespace MagicCompiler.Grammar
             return cfg;
         }
 
-        private List<Rule> StringToRule(string rule)
+        private List<Production> StringToRule(string rule)
         {
             rule = rule.ToLower();
-            List<Rule> result = new List<Rule>();
-            List<string> leftRight = new List<string>(rule.Split("::="));
+            List<Production> result = new List<Production>();
+            List<string> leftRight = new List<string>(rule.Split(RULE_LEFT_RIGHT_SEPARATOR));
             string left = leftRight[0].Trim(); // added trim because it was reading an extra space char
 
-            List<string> right = new List<string>(leftRight[1].Split("|"));
+            List<string> right = new List<string>(leftRight[1].Split(INLINE_RULE_SEPARATOR));
             for (int j = 0; j < right.Count; j++)
             {
-                Rule duaLipaNewRule = new Rule() { Left = left };
+                Production duaLipaNewRule = new Production() { Left = left };
                 duaLipaNewRule.Right.AddRange(right[j].Trim().Split(" "));
                 result.Add(duaLipaNewRule);
             }

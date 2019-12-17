@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MagicCompiler.Grammar
+namespace MagicCompiler.Structures.Grammar
 {
-    internal class Rule
+    public class Production
     {
         public string Left;
         public List<string> Right = new List<string>();
+
+        public override string ToString()
+        {
+            var result = string.Format("{0} ::=", Left);
+            Right.ForEach(x => result += " " + x);
+            return result;
+        }
 
         #region Tests
         public void PrintRule(bool newLine = true)
@@ -18,13 +25,6 @@ namespace MagicCompiler.Grammar
                 Console.Write(Right[i] + " ");
             }
             if (newLine) Console.WriteLine("");
-        }
-
-        public string RuleToString()
-        {
-            var result = string.Format("{0} ::=", Left);
-            Right.ForEach(x => result += " " + x);
-            return result;
         }
         #endregion
     }

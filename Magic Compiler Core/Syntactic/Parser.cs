@@ -2,6 +2,9 @@
 using MagicCompiler.Grammar;
 using MagicCompiler.Lexical;
 using MagicCompiler.Properties;
+using MagicCompiler.Semantic;
+using MagicCompiler.Semantic.Interfaces;
+using MagicCompiler.Structures.Lexical;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +17,8 @@ namespace MagicCompiler.Syntactic
         private ParsingTable _parsingTable;
         private Lexer _lexer;
 
+        private ISemanticAnalyzer _semanticAnalyzer;
+
         public bool DEBUG => bool.Parse(Resources.Debug);
 
         public Parser()
@@ -21,6 +26,9 @@ namespace MagicCompiler.Syntactic
             _parsingTable = new ParsingTable();
             _lexer = new Lexer();
             _lexer.Analyze();
+
+            var semanticScriptLoader = new SemanticScriptLoader();
+            _semanticAnalyzer = semanticScriptLoader.GetSemanticAnalyzer();
 
             if (DEBUG) _parsingTable.PrintTable();
         }
@@ -85,10 +93,12 @@ namespace MagicCompiler.Syntactic
 
         public void Check()
         {
-            Stack<State> stateStack = new Stack<State>();
-            Token token = _lexer.Next();
-            stateStack.Push(_parsingTable.InitialState);
             bool finish = false;
+            Token token = _lexer.Next();
+            List<Token> usedTokens = new List<Token>() { token };
+            Stack<State> stateStack = new Stack<State>();
+            stateStack.Push(_parsingTable.InitialState);
+
             while (!finish)
             {
                 var state = _parsingTable.StateParser(stateStack.Peek());
@@ -107,6 +117,7 @@ namespace MagicCompiler.Syntactic
                             if (DEBUG) DebugAction(action, stateStack.Peek());
                             stateStack.Push(action.Shift);
                             token = _lexer.Next();
+                            usedTokens.Add(token);
                             break;
                         case ActionType.Reduce:
                             for (int i = 0; i < action.Reduce.Right.Count; i++)
@@ -116,9 +127,15 @@ namespace MagicCompiler.Syntactic
                             if (DEBUG) DebugAction(action, stateStack.Peek());
 
                             if (state.Goto.ContainsKey(action.Reduce.Left))
+                            {
                                 stateStack.Push(state.Goto[action.Reduce.Left]);
-                            else 
-                                finish = true;
+                                if (_semanticAnalyzer.RequiresEvaluation(action.Reduce))
+                                {
+                                    finish = !_semanticAnalyzer.Evaluate(usedTokens.ToArray(), action.Reduce); // SEMANTIC FAIL == FALSE || 
+                                    usedTokens.Clear();
+                                }
+                            }
+                            else  finish = true;
                             break;
                         case ActionType.Accept:
                             if (DEBUG) DebugAction(action, stateStack.Peek());

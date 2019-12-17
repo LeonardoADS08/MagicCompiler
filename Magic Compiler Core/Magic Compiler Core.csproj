@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Scripts\semantic.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Automaton\NewFile1.txt" />
     <None Remove="Data\grammar_config.json" />
     <None Remove="Data\grammar_rules.txt" />
@@ -14,7 +18,7 @@
     <None Remove="Data\lexical_keywords.txt" />
     <None Remove="Data\lexical_operators.txt" />
     <None Remove="Data\lexical_regex.txt" />
-    <None Remove="Scripts\semanticScripts.txt" />
+    <None Remove="Scripts\semanticParams.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,19 +40,24 @@
     <Content Include="Data\lexical_regex.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\semanticScripts.txt">
+    <Content Include="Scripts\semantic.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\semanticParams.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Magic Compiler Semantic Interface\Magic Compiler Semantic Interface.csproj" />
+    <ProjectReference Include="..\Magic Compiler Structures\Magic Compiler Structures.csproj" />
   </ItemGroup>
 
   <ItemGroup>

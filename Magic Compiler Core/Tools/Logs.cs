@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagicCompiler
+namespace MagicCompiler.Tools
 {
 
     public static class Logs

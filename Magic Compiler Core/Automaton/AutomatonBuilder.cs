@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using MagicCompiler.Grammar;
+using MagicCompiler.Structures.Grammar;
 
 namespace MagicCompiler.Automaton
 {
@@ -12,7 +13,7 @@ namespace MagicCompiler.Automaton
         public CFG KGrammar;
 
         private List<Item> _productionItems;
-        private Rule _startingProduction;
+        private Production _startingProduction;
 
         private List<Item> NonKernelItems => _productionItems.Where(x => x.DotPosition == 0 && x.Production != _startingProduction).ToList();
         private List<Item> KernelItems => _productionItems.Where(x => x.DotPosition != 0 || x.Production == _startingProduction).ToList();
@@ -44,7 +45,7 @@ namespace MagicCompiler.Automaton
             KGrammar.ExtendGrammar();
         }
 
-        private void ComputeItems(Rule production)
+        private void ComputeItems(Production production)
         {
             List<Item> items = new List<Item>();
             for (int i = 0; i <= production.Right.Count; i++)

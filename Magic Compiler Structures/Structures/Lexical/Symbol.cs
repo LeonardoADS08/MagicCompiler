@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MagicCompiler.Lexical
+namespace MagicCompiler.Structures.Lexical
 {
-    internal struct Symbol
+    public struct Symbol
     {
         public string Type { get; set; }
         public string Pattern { get; set; }

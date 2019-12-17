@@ -1,9 +1,14 @@
-﻿using System;
+﻿using MagicCompiler.Structures.Grammar;
+using MagicCompiler.Structures.Lexical;
+using System;
+using System.Collections.Generic;
 
-namespace MCSI
+namespace MagicCompiler.Semantic.Interfaces
 {
+
     public interface ISemanticAnalyzer
     {
-        bool Analyze();
+        bool RequiresEvaluation(Production reduceProduction);
+        bool Evaluate(Token[] tokens, Production reduceProduction);
     }
 }

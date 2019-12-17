@@ -1,5 +1,6 @@
 ﻿using MagicCompiler.Automaton;
 using MagicCompiler.Grammar;
+using MagicCompiler.Structures.Grammar;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,6 @@ namespace MagicCompiler.Syntactic
     {
         public ActionType Type;
         public State Shift;
-        public Rule Reduce;
+        public Production Reduce;
     }
 }

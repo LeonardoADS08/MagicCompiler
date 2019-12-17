@@ -2,8 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RootNamespace>MCSI</RootNamespace>
-    <AssemblyName>MCSI</AssemblyName>
+    <RootNamespace>MagicCompiler</RootNamespace>
+    <AssemblyName>Magic Compiler Semantic Interface</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magic Compiler Structures\Magic Compiler Structures.csproj" />
+  </ItemGroup>
 
 </Project>

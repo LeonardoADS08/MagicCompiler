@@ -1,4 +1,5 @@
 ﻿using MagicCompiler.Grammar;
+using MagicCompiler.Structures.Grammar;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace MagicCompiler.Automaton
 {
     internal class Item
     {
-        public Rule Production;
+        public Production Production;
         public int DotPosition;
 
         #region Tests

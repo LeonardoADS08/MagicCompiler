@@ -1,4 +1,38 @@
-﻿SeqElementos ::= Valor , SeqElementos 
+﻿Programa ::= SeqSentencias
+Programa ::= Funcion Sentencias
+Funcion ::= ID SeqSentencias End
+Funcion ::= ID ( Parametros ) SeqSentencias
+Parametros ::= ID Parametros
+Parametros ::= ID
+SeqSentencias ::= Sentencia
+SeqSentencias ::= Sentencia SeqSentencias
+Valor ::= Constante
+Valor ::= ID
+Sentencia ::= Asignacion
+Sentencia ::= LlamadaFuncion
+Sentencia ::= Condicional
+Asignacion ::= ID = Valor
+Asignacion ::= ID = LlamadaFuncion
+Asignacion ::= [ SeqID ] = LlamadaFuncion
+SeqID ::= ID 
+SeqID ::= ID , SeqID
+LlamadaFuncion ::= ID
+LlamadaFuncion ::= ID ( Parametros )
+ExpLogica ::= Valor
+ExpLogica ::= ID
+ExpLogica ::= LlamadaFuncion
+ExpLogica ::= Valor OpLog ExpLogica
+ExpLogica ::= ID OpLog ExpLogica
+ExpLogica ::= LlamadaFuncion OpLog ExpLogica
+ExpLogica ::= ( ExpLogica )
+OpLog ::= &&
+OpLog ::= ||
+OpLog ::= <
+OpLog ::= >
+OpLog ::= >=
+OpLog ::= <=
+OpLog ::= ==
+SeqElementos ::= Valor , SeqElementos 
 SeqElementos ::= LlamadaFuncion , SeqElementos 
 SeqElementos ::= ID , SeqElementos 
 SeqElementos ::= Matriz , SeqElementos 

@@ -1,14 +1,5 @@
-﻿using MagicCompiler.Grammar;
-using MagicCompiler.Lexical;
-using MagicCompiler.Automaton;
-using System;
+﻿using MagicCompiler.Syntactic;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
-using MagicCompiler.Syntactic;
-using MagicCompiler.Tools;
-using MCSI;
 
 namespace Magic_Compiler
 {
@@ -19,11 +10,10 @@ namespace Magic_Compiler
 
             Parser parser = new Parser();
             parser.Check();
-
-            ScriptEngine sc = new ScriptEngine("semanticScripts.txt");
-            var assembly = sc.Compile();
-            var instancia = assembly.CreateInstance<ISemanticAnalyzer>("MagicCompilerScripts.SemanticScript");
-            if (instancia.Analyze()) Console.WriteLine("WORKS!");
+            List<int> a = new List<int>();
+            //SemanticScriptLoader sc = new SemanticScriptLoader();
+            //var instancia = sc.GetSemanticAnalyzer();
+            //if (instancia.Analyze()) Console.WriteLine("WORKS!");
         }
     }
 }

@@ -1,0 +1,5 @@
+{
+  "DefaultClass": "SemanticAnalyzer",
+  "References": [],
+  "Scripts": [ "semantic.cs" ]
+}

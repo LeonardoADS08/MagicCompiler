@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicCompiler.Structures.Grammar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,7 @@ namespace MagicCompiler.Grammar
         #endregion
 
         public CFGConfig Configuration;
-        public List<Rule> Productions = new List<Rule>();
+        public List<Production> Productions = new List<Production>();
 
         private List<string> _terminals;
         private List<string> _nonTerminals;
@@ -110,7 +111,7 @@ namespace MagicCompiler.Grammar
         {
             _first = new Dictionary<string, List<string>>();
 
-            HashSet<Rule> analyzedProductions = new HashSet<Rule>();
+            HashSet<Production> analyzedProductions = new HashSet<Production>();
             var terminalStartingProductions = Productions.Where(x => IsTerminal(x.Right[0])).ToList();
             terminalStartingProductions.ForEach(production =>
             {
@@ -125,7 +126,7 @@ namespace MagicCompiler.Grammar
         }
 
         // ref: https://www.youtube.com/watch?v=BSTBaPFxs3Q
-        private List<string> FirstOf(Rule production, HashSet<Rule> analyzedProductions)
+        private List<string> FirstOf(Production production, HashSet<Production> analyzedProductions)
         {
             if (analyzedProductions.Contains(production))
             {
@@ -176,13 +177,13 @@ namespace MagicCompiler.Grammar
         {
             _follow = new Dictionary<string, List<string>>();
             
-            HashSet<Rule> analyzedProductions = new HashSet<Rule>();
+            HashSet<Production> analyzedProductions = new HashSet<Production>();
             Productions.ForEach(x => CalculateFollowOf(x, analyzedProductions));
         }
 
         // ref:  https://www.youtube.com/watch?v=BSTBaPFxs3Q
         // ref2: https://www.youtube.com/watch?v=_uSlP91jmTM
-        private List<string> CalculateFollowOf(Rule actualProduction, HashSet<Rule> analyzedProductions)
+        private List<string> CalculateFollowOf(Production actualProduction, HashSet<Production> analyzedProductions)
         {
             if (actualProduction.Right[0] == Configuration.Epsilon) return new List<string>();
             if (analyzedProductions.Contains(actualProduction))

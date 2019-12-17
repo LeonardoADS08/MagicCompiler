@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicCompiler.Structures.Lexical;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

@@ -1,7 +1,7 @@
-﻿using MCSI;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
+using Microsoft.Extensions.DependencyModel;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -11,43 +11,58 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
 
+public class test
+{
+
+}
+
 namespace MagicCompiler.Tools
 {
     // TODO Customs scripts list
     public class ScriptEngine
     {
-        private readonly string FILE_DIRECTION_SCRIPTS = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Scripts");
-        private string _codeText;
+        public static readonly string FILE_DIRECTION_SCRIPTS = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Scripts");
 
         private Assembly _compiledAssembly = null;
+        private ScriptParams _scriptParams;
 
-        public ScriptEngine(string fileName)
+        public ScriptEngine(ScriptParams parameters)
         {
-            using (var reader = new StreamReader(Path.Combine(FILE_DIRECTION_SCRIPTS, fileName)))
-            {
-                _codeText = reader.ReadToEnd();
-            }
+            _scriptParams = parameters;
         }
 
         public Assembly Compile(bool recompile = false)
         {
             if (_compiledAssembly != null && !recompile) return _compiledAssembly;
-
-            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(_codeText);
             
-            // TODO custom references!
+            List<SyntaxTree> syntaxTrees = new List<SyntaxTree>();
+            _scriptParams.Scripts.ForEach(script =>
+            {
+                using (StreamReader reader = new StreamReader(Path.Combine(FILE_DIRECTION_SCRIPTS, script)))
+                {
+                    syntaxTrees.Add(CSharpSyntaxTree.ParseText(reader.ReadToEnd()));
+                }
+            });
+            
             string assemblyName = Path.GetRandomFileName();
-            var refPaths = new[] {
+            var refPaths = new List<string>(new[] {
                 typeof(System.Object).GetTypeInfo().Assembly.Location,
+                typeof(IQueryable).GetTypeInfo().Assembly.Location,
                 typeof(Console).GetTypeInfo().Assembly.Location,
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Runtime.dll"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"MCSI.dll")
-            };
-            MetadataReference[] references = refPaths.Select(r => MetadataReference.CreateFromFile(r)).ToArray();
+                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "mscorlib.dll"),
+                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "netstandard.dll"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Magic Compiler Semantic Interface.dll"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Magic Compiler Structures.dll")
+            });
+            refPaths.AddRange(_scriptParams.References);
 
+            List<MetadataReference> references = new List<MetadataReference>(refPaths.Select(r => MetadataReference.CreateFromFile(r))) ;
+            references.AddRange(DependencyContext.Default.CompileLibraries.SelectMany(cl => cl.ResolveReferencePaths()).Select(asm => MetadataReference.CreateFromFile(asm)));
+           
             CSharpCompilation compilation = CSharpCompilation.Create(
                 assemblyName,
-                syntaxTrees: new[] { syntaxTree },
+                syntaxTrees: syntaxTrees,
                 references: references,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
