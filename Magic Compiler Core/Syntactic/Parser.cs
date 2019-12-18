@@ -133,9 +133,11 @@ namespace MagicCompiler.Syntactic
                                 {
                                     finish = !_semanticAnalyzer.Evaluate(usedTokens.ToArray(), action.Reduce); // SEMANTIC FAIL == FALSE || 
                                     usedTokens.Clear();
+                                    if (finish) Console.WriteLine("Semantic Error");
+                                    else Console.WriteLine("Semantic OK");
                                 }
                             }
-                            else  finish = true;
+                            else finish = true;
                             break;
                         case ActionType.Accept:
                             if (DEBUG) DebugAction(action, stateStack.Peek());

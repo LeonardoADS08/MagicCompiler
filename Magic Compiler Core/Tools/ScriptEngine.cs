@@ -11,11 +11,6 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
 
-public class test
-{
-
-}
-
 namespace MagicCompiler.Tools
 {
     // TODO Customs scripts list

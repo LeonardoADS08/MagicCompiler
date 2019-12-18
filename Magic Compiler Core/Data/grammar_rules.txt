@@ -41,5 +41,6 @@ SeqElementos ::= LlamadaFuncion
 SeqElementos ::= ID
 Fila ::= SeqElementos ; Fila
 Fila ::= SeqElementos ;
+Fila ::= SeqElementos
 Matriz ::= [ SeqElementos ]
 Matriz ::= [ SeqElementos ; Fila ]
