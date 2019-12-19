@@ -13,6 +13,7 @@ Sentencia ::= LlamadaFuncion
 Sentencia ::= Condicional
 Asignacion ::= ID = Valor
 Asignacion ::= ID = LlamadaFuncion
+Asignacion ::= ID = Matriz
 Asignacion ::= [ SeqID ] = LlamadaFuncion
 SeqID ::= ID 
 SeqID ::= ID , SeqID

@@ -3,11 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>MagicCompiler</RootNamespace>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Scripts\semantic.cs" />
+    <Compile Remove="Scripts\*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +17,13 @@
     <None Remove="Data\lexical_keywords.txt" />
     <None Remove="Data\lexical_operators.txt" />
     <None Remove="Data\lexical_regex.txt" />
+    <None Remove="Scripts\ISemanticValidation.mc" />
+    <None Remove="Scripts\MatlabSemantic.mc" />
+    <None Remove="Scripts\sas_Matrix.mc" />
+    <None Remove="Scripts\sas_Variable.mc" />
     <None Remove="Scripts\semanticParams.json" />
+    <None Remove="Scripts\ss_Context.mc" />
+    <None Remove="Scripts\sv_MatrixDefinition.mc" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,19 +45,33 @@
     <Content Include="Data\lexical_regex.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\semantic.cs">
+    <Content Include="Scripts\ISemanticValidation.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\MatlabSemantic.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\sas_Matrix.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\sas_Variable.mc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\semanticParams.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\ss_Context.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\sv_MatrixDefinition.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,5 +97,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties scripts_4semanticparams_1json__JsonSchema="http://json-schema.org/draft-04/schema" /></VisualStudio></ProjectExtensions>
 
 </Project>

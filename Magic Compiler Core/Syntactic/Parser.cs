@@ -21,16 +21,27 @@ namespace MagicCompiler.Syntactic
 
         public bool DEBUG => bool.Parse(Resources.Debug);
 
+        private bool _error = false;
         public Parser()
         {
-            _parsingTable = new ParsingTable();
-            _lexer = new Lexer();
-            _lexer.Analyze();
-
             var semanticScriptLoader = new SemanticScriptLoader();
-            _semanticAnalyzer = semanticScriptLoader.GetSemanticAnalyzer();
+            if (semanticScriptLoader.Assembly == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Errors on scripts, can't continue...");
+                Console.ResetColor();
+                _error = true;
+            }
+            else
+            {
+                _semanticAnalyzer = semanticScriptLoader.GetSemanticAnalyzer();
 
-            if (DEBUG) _parsingTable.PrintTable();
+                _parsingTable = new ParsingTable();
+                _lexer = new Lexer();
+                _lexer.Analyze();
+            }
+            
+            //if (DEBUG) _parsingTable.PrintTable();
         }
 
         private void DebugStack(Stack<State> stateStack)
@@ -93,6 +104,8 @@ namespace MagicCompiler.Syntactic
 
         public void Check()
         {
+            if (_error) return;
+
             bool finish = false;
             Token token = _lexer.Next();
             List<Token> usedTokens = new List<Token>() { token };
@@ -131,8 +144,22 @@ namespace MagicCompiler.Syntactic
                                 stateStack.Push(state.Goto[action.Reduce.Left]);
                                 if (_semanticAnalyzer.RequiresEvaluation(action.Reduce))
                                 {
+                                    Token lastToken;
+                                    if (usedTokens.Count != 0)
+                                    {
+                                        lastToken = usedTokens.Last();
+                                        usedTokens.Remove(lastToken);
+                                    }
+                                    
                                     finish = !_semanticAnalyzer.Evaluate(usedTokens.ToArray(), action.Reduce); // SEMANTIC FAIL == FALSE || 
-                                    usedTokens.Clear();
+                                   
+                                    if (usedTokens.Count == 0) usedTokens.Add(lastToken);
+                                    else
+                                    {
+                                        usedTokens.Clear();
+                                        usedTokens.Add(lastToken);
+                                    }
+
                                     if (finish) Console.WriteLine("Semantic Error");
                                     else Console.WriteLine("Semantic OK");
                                 }

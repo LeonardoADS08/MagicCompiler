@@ -1,4 +1,4 @@
 ﻿{
-  "AugmentedGrammar": "$accepted ::= Matriz",
+  "AugmentedGrammar": "$accepted ::= programa",
   "EpsilonSymbol": "epsilon"
 }

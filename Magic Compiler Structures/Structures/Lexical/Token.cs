@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MagicCompiler.Structures.Lexical
@@ -20,6 +21,15 @@ namespace MagicCompiler.Structures.Lexical
             Lexeme = lexeme;
             Symbol = symbol;
         }
+
+        public bool IsSymbol(params string[] symbol)
+        {
+            for (int i = 0; i < symbol.Length; i++)
+                if (symbol[i] == Symbol.TSymbol) return true;
+            return false;
+        }
+
+        public override string ToString() => Lexeme + " - " + Symbol.TSymbol;
 
         #region Tests
         public void PrintToken()

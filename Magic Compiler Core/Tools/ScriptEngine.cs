@@ -1,7 +1,7 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using MagicCompiler.Structures.Lexical;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using Microsoft.Extensions.DependencyModel;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -38,12 +38,16 @@ namespace MagicCompiler.Tools
                     syntaxTrees.Add(CSharpSyntaxTree.ParseText(reader.ReadToEnd()));
                 }
             });
-            
+
             string assemblyName = Path.GetRandomFileName();
             var refPaths = new List<string>(new[] {
                 typeof(System.Object).GetTypeInfo().Assembly.Location,
                 typeof(IQueryable).GetTypeInfo().Assembly.Location,
                 typeof(Console).GetTypeInfo().Assembly.Location,
+                typeof(System.Linq.Enumerable).GetTypeInfo().Assembly.Location,
+                typeof(System.Collections.ICollection).GetTypeInfo().Assembly.Location,
+                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.dll"),
+                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Core.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Runtime.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "mscorlib.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "netstandard.dll"),
@@ -52,14 +56,38 @@ namespace MagicCompiler.Tools
             });
             refPaths.AddRange(_scriptParams.References);
 
-            List<MetadataReference> references = new List<MetadataReference>(refPaths.Select(r => MetadataReference.CreateFromFile(r))) ;
-            references.AddRange(DependencyContext.Default.CompileLibraries.SelectMany(cl => cl.ResolveReferencePaths()).Select(asm => MetadataReference.CreateFromFile(asm)));
-           
+
+            var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
+            var coreDir = Directory.GetParent(dd);
+
+            List<MetadataReference> references = new List<MetadataReference>
+            {   
+                // Here we get the path to the mscorlib and private mscorlib
+                // libraries that are required for compilation to succeed.
+                MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
+                MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location)
+            };
+
+            var referencedAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
+            foreach (var referencedAssembly in referencedAssemblies)
+            {
+                var loadedAssembly = Assembly.Load(referencedAssembly);
+
+                references.Add(MetadataReference.CreateFromFile(loadedAssembly.Location));
+            }
+
+            references.AddRange(refPaths.Select(r => MetadataReference.CreateFromFile(r)));
+            references.Add(MetadataReference.CreateFromFile(Assembly.GetEntryAssembly().Location));
+
             CSharpCompilation compilation = CSharpCompilation.Create(
                 assemblyName,
                 syntaxTrees: syntaxTrees,
                 references: references,
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+                options: new CSharpCompilationOptions(
+                            OutputKind.DynamicallyLinkedLibrary,
+                            platform: Platform.AnyCpu,
+                            assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
+                            optimizationLevel: OptimizationLevel.Release));
 
             using (var memoryStream = new MemoryStream())
             {

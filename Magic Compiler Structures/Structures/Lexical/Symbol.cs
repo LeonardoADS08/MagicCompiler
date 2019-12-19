@@ -17,6 +17,8 @@ namespace MagicCompiler.Structures.Lexical
             TSymbol = tsymbol;
         }
 
+        public override string ToString() => TSymbol;
+
         #region Tests
         public void PrintSymbol(bool newLine = false)
         {

@@ -1,5 +1,12 @@
 {
-  "DefaultClass": "SemanticAnalyzer",
+  "DefaultClass": "MagicCompiler.Matlab.MatlabSemantic",
   "References": [],
-  "Scripts": [ "semantic.cs" ]
+  "Scripts": [
+    "ISemanticValidation.mc",
+    "sas_Matrix.mc",
+    "sas_Variable.mc",
+    "ss_Context.mc",
+    "sv_MatrixDefinition.mc",
+    "MatlabSemantic.mc"
+  ]
 }
