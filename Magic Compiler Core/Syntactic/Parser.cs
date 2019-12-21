@@ -41,7 +41,11 @@ namespace MagicCompiler.Syntactic
                 _lexer.Analyze();
             }
             
-            //if (DEBUG) _parsingTable.PrintTable();
+            if (DEBUG)
+            {
+                //_parsingTable.PrintTable();
+                _parsingTable.SaveTable();
+            }
         }
 
         private void DebugStack(Stack<State> stateStack)
@@ -142,7 +146,7 @@ namespace MagicCompiler.Syntactic
                             if (state.Goto.ContainsKey(action.Reduce.Left))
                             {
                                 stateStack.Push(state.Goto[action.Reduce.Left]);
-                                if (_semanticAnalyzer.RequiresEvaluation(action.Reduce))
+                                if (false && _semanticAnalyzer.RequiresEvaluation(action.Reduce))
                                 {
                                     Token lastToken;
                                     if (usedTokens.Count != 0)
@@ -152,7 +156,7 @@ namespace MagicCompiler.Syntactic
                                     }
                                     
                                     finish = !_semanticAnalyzer.Evaluate(usedTokens.ToArray(), action.Reduce); // SEMANTIC FAIL == FALSE || 
-                                   
+                                    usedTokens.Clear();
                                     if (usedTokens.Count == 0) usedTokens.Add(lastToken);
                                     else
                                     {

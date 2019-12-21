@@ -1,38 +1,25 @@
 ﻿Programa ::= SeqSentencias
-Programa ::= Funcion Sentencias
-Funcion ::= ID SeqSentencias End
-Funcion ::= ID ( Parametros ) SeqSentencias
-Parametros ::= ID Parametros
+Funcion ::= function ID SeqSentencias End
+Funcion ::= function ID ( Parametros ) SeqSentencias End
+Parametros ::= ID , Parametros
 Parametros ::= ID
 SeqSentencias ::= Sentencia
 SeqSentencias ::= Sentencia SeqSentencias
 Valor ::= Constante
 Valor ::= ID
+Valor ::= Matriz
+Sentencia ::= Funcion
 Sentencia ::= Asignacion
 Sentencia ::= LlamadaFuncion
-Sentencia ::= Condicional
+Sentencia ::= For
+Sentencia ::= While
 Asignacion ::= ID = Valor
 Asignacion ::= ID = LlamadaFuncion
-Asignacion ::= ID = Matriz
 Asignacion ::= [ SeqID ] = LlamadaFuncion
 SeqID ::= ID 
 SeqID ::= ID , SeqID
 LlamadaFuncion ::= ID
 LlamadaFuncion ::= ID ( Parametros )
-ExpLogica ::= Valor
-ExpLogica ::= ID
-ExpLogica ::= LlamadaFuncion
-ExpLogica ::= Valor OpLog ExpLogica
-ExpLogica ::= ID OpLog ExpLogica
-ExpLogica ::= LlamadaFuncion OpLog ExpLogica
-ExpLogica ::= ( ExpLogica )
-OpLog ::= &&
-OpLog ::= ||
-OpLog ::= <
-OpLog ::= >
-OpLog ::= >=
-OpLog ::= <=
-OpLog ::= ==
 SeqElementos ::= Valor , SeqElementos 
 SeqElementos ::= LlamadaFuncion , SeqElementos 
 SeqElementos ::= ID , SeqElementos 
@@ -42,6 +29,24 @@ SeqElementos ::= LlamadaFuncion
 SeqElementos ::= ID
 Fila ::= SeqElementos ; Fila
 Fila ::= SeqElementos ;
-Fila ::= SeqElementos
+Fila ::= SeqElementos 
 Matriz ::= [ SeqElementos ]
 Matriz ::= [ SeqElementos ; Fila ]
+Asignacion ::= ID = Exp
+Exp ::= Operando RestoExp
+Exp ::= Operando
+Operando ::= True
+Operando ::= False
+Operando ::= Valor
+Operando ::= LlamadaFuncion
+Operando ::= ( Operando )
+Operando ::= Operando OpLog Exp
+Operando ::= Operando OpLog Operando
+OpLog ::= &&
+OpLog ::= ||
+OpLog ::= <
+OpLog ::= >
+OpLog ::= >=
+OpLog ::= <=
+OpLog ::= ==
+OpLog ::= ~=

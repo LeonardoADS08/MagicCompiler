@@ -45,49 +45,30 @@ namespace MagicCompiler.Tools
                 typeof(IQueryable).GetTypeInfo().Assembly.Location,
                 typeof(Console).GetTypeInfo().Assembly.Location,
                 typeof(System.Linq.Enumerable).GetTypeInfo().Assembly.Location,
-                typeof(System.Collections.ICollection).GetTypeInfo().Assembly.Location,
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Core.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Runtime.dll"),
+                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Collections.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "mscorlib.dll"),
                 Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "netstandard.dll"),
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Magic Compiler Semantic Interface.dll"),
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Magic Compiler Structures.dll")
             });
             refPaths.AddRange(_scriptParams.References);
+            refPaths = refPaths.Distinct().ToList();
 
-
-            var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
-            var coreDir = Directory.GetParent(dd);
-
-            List<MetadataReference> references = new List<MetadataReference>
-            {   
-                // Here we get the path to the mscorlib and private mscorlib
-                // libraries that are required for compilation to succeed.
-                MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
-                MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location)
-            };
-
-            var referencedAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
-            foreach (var referencedAssembly in referencedAssemblies)
-            {
-                var loadedAssembly = Assembly.Load(referencedAssembly);
-
-                references.Add(MetadataReference.CreateFromFile(loadedAssembly.Location));
-            }
-
+            List<PortableExecutableReference> references = new List<PortableExecutableReference>();
             references.AddRange(refPaths.Select(r => MetadataReference.CreateFromFile(r)));
-            references.Add(MetadataReference.CreateFromFile(Assembly.GetEntryAssembly().Location));
 
             CSharpCompilation compilation = CSharpCompilation.Create(
-                assemblyName,
-                syntaxTrees: syntaxTrees,
-                references: references,
-                options: new CSharpCompilationOptions(
-                            OutputKind.DynamicallyLinkedLibrary,
-                            platform: Platform.AnyCpu,
-                            assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
-                            optimizationLevel: OptimizationLevel.Release));
+            assemblyName,
+            syntaxTrees: syntaxTrees,
+            references: references,
+            options: new CSharpCompilationOptions(
+                        OutputKind.DynamicallyLinkedLibrary,
+                        platform: Platform.AnyCpu,
+                        assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
+                        optimizationLevel: OptimizationLevel.Release));
 
             using (var memoryStream = new MemoryStream())
             {
@@ -102,7 +83,7 @@ namespace MagicCompiler.Tools
                     Console.ForegroundColor = ConsoleColor.Red;
                     foreach (Diagnostic diagnostic in failures)
                     {
-                        Console.WriteLine("\t{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                        Console.WriteLine("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
                         Console.WriteLine();
                     }
                     Console.ResetColor();

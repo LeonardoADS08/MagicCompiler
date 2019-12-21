@@ -24,7 +24,11 @@ namespace MagicCompiler.Matlab
         {
             List<ISemanticValidation> validations = new List<ISemanticValidation>()
             {
-                new sv_MatrixDefinition()
+                new sv_MatrixDefinition(),
+                new sv_MatrixAddition(),
+                new sv_MatrixSubstract(),
+                new sv_MatrixMultiply(),
+                new sv_MatrixDivision()
             };
             validations.ForEach(validation => AddValidation(validation));
 

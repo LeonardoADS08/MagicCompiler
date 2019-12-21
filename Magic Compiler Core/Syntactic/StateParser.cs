@@ -126,6 +126,42 @@ namespace MagicCompiler.Syntactic
             Console.WriteLine();
         }
 
+        public string StateToString()
+        {
+            string res = "";
+            res += "State: " + State.Order;
+            res += "\r\nAction: \r\n";
+            foreach (var action in Action)
+            {
+                res += action.Key + " ->";
+                switch (action.Value.Type)
+                {
+                    case ActionType.Shift:
+                        res += " Shift to state: " + action.Value.Shift.Order;
+                        break;
+                    case ActionType.Reduce:
+                        res += " Reduce to production: " + action.Value.Reduce.ToString();
+                        break;
+                    case ActionType.Accept:
+                        res += " Accept";
+                        break;
+                    case ActionType.Error:
+                        res +=  " Error";
+                        break;
+                    default:
+                        break;
+                }
+                res += "\r\n";
+            }
+            res += "Goto: ";
+            foreach (var gotos in Goto)
+            {
+                res += gotos.Key + " -> " + gotos.Value.Order + "\r\n";
+            }
+            res += "\r\n";
+            return res;
+        }
+
         #endregion
     }
 }

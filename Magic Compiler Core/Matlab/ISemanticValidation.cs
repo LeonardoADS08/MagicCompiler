@@ -8,6 +8,7 @@ namespace MagicCompiler.Matlab
 {
     public interface ISemanticValidation
     {
+        //bool ValidProduction(Production production);
         string Production { get; }
         bool Evaluate(List<Token> tokens, ss_Context context);
     }

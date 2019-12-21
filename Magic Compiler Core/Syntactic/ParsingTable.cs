@@ -2,6 +2,7 @@
 using MagicCompiler.Grammar;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace MagicCompiler.Syntactic
@@ -27,6 +28,14 @@ namespace MagicCompiler.Syntactic
         public void PrintTable()
         {
             this.ForEach(x => x.PrintStateParser());
+        }
+
+        public void SaveTable()
+        {
+            using (StreamWriter writer = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"table.txt")))
+            {
+                this.ForEach(x => writer.WriteLine(x.StateToString()));
+            }
         }
         #endregion
     }
