@@ -35,76 +35,19 @@ namespace MagicCompiler.Syntactic
             else
             {
                 _semanticAnalyzer = semanticScriptLoader.GetSemanticAnalyzer();
-
+                _semanticAnalyzer = new Matlab.MatlabSemantic();
+                
                 _parsingTable = new ParsingTable();
                 _lexer = new Lexer();
                 _lexer.Analyze();
             }
-            
+
             if (DEBUG)
             {
                 //_parsingTable.PrintTable();
                 _parsingTable.SaveTable();
             }
         }
-
-        private void DebugStack(Stack<State> stateStack)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write("Stack : ");
-            var stack = stateStack.ToList();
-            stack.Reverse();
-            stack.ForEach(x => Console.Write(" " + x.Order));
-            Console.WriteLine();
-            Console.ResetColor();
-        }
-
-        private void DebugToken(Token token)
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("Token : ");
-            token.PrintTokenForParser();
-            Console.ResetColor();
-        }
-
-        private void DebugAction(Action action, State state)
-        {
-            switch (action.Type)
-            {
-                case ActionType.Shift:
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("Shift : " + action.Shift.Order);
-                    Console.ResetColor();
-                    break;
-                case ActionType.Reduce:
-                    if (state.Goto.ContainsKey(action.Reduce.Left))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("Reduce: ");
-                        action.Reduce.PrintRule(false);
-                        Console.WriteLine();
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Error on reduce!");
-                        Console.ResetColor();
-                    }
-                    break;
-                case ActionType.Accept:
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Accepted by MagicCompiler");
-                    Console.ResetColor();
-                    break;
-                case ActionType.Error:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Error!");
-                    Console.ResetColor();
-                    break;
-            }
-        }
-
 
         public void Check()
         {
@@ -190,6 +133,63 @@ namespace MagicCompiler.Syntactic
             }
         }
 
-        
+        #region Tests
+        private void DebugStack(Stack<State> stateStack)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("Stack : ");
+            var stack = stateStack.ToList();
+            stack.Reverse();
+            stack.ForEach(x => Console.Write(" " + x.Order));
+            Console.WriteLine();
+            Console.ResetColor();
+        }
+
+        private void DebugToken(Token token)
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Token : ");
+            token.PrintTokenForParser();
+            Console.ResetColor();
+        }
+
+        private void DebugAction(Action action, State state)
+        {
+            switch (action.Type)
+            {
+                case ActionType.Shift:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("Shift : " + action.Shift.Order);
+                    Console.ResetColor();
+                    break;
+                case ActionType.Reduce:
+                    if (state.Goto.ContainsKey(action.Reduce.Left))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("Reduce: ");
+                        action.Reduce.PrintRule(false);
+                        Console.WriteLine();
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Error on reduce!");
+                        Console.ResetColor();
+                    }
+                    break;
+                case ActionType.Accept:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Accepted by MagicCompiler");
+                    Console.ResetColor();
+                    break;
+                case ActionType.Error:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error!");
+                    Console.ResetColor();
+                    break;
+            }
+        }
+        #endregion
     }
 }

@@ -2,13 +2,16 @@
 using MagicCompiler.Structures.Lexical;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MagicCompiler.Matlab
 {
     public class sv_MatrixDefinition : ISemanticValidation
     {
-        public string Production => "matriz ::= [ seqelementos ; fila ]";
+        public string[] Productions => new string[] { "matriz ::= [ seqelementos ; fila ]" };
+
+        public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
         public bool Evaluate(List<Token> tokens, ss_Context context)
         {

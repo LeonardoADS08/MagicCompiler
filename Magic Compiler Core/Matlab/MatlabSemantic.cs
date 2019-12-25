@@ -18,7 +18,7 @@ namespace MagicCompiler.Matlab
     public class MatlabSemantic : ISemanticAnalyzer
     {
         public ss_Context _context = new ss_Context();
-        private Dictionary<string, ISemanticValidation> _validations = new Dictionary<string, ISemanticValidation>();
+        private Dictionary<string, List<ISemanticValidation>> _validations = new Dictionary<string, List<ISemanticValidation>>();
 
         public MatlabSemantic()
         {
@@ -34,7 +34,16 @@ namespace MagicCompiler.Matlab
 
         }
 
-        private void AddValidation(ISemanticValidation IValidation) => _validations.TryAdd(IValidation.Production, IValidation);
+        private void AddValidation(ISemanticValidation IValidation)
+        {
+            foreach (var item in IValidation.Productions)
+            {
+                if (_validations.ContainsKey(item)) 
+                    _validations[item].Add(IValidation);
+                else
+                    _validations[item] = new List<ISemanticValidation>() { IValidation };
+            }
+        }
         public bool RequiresEvaluation(Production reduceProduction) => _validations.ContainsKey(reduceProduction.ToString());
 
         public bool Evaluate(Token[] tokens, Production reduceProduction)
@@ -43,7 +52,7 @@ namespace MagicCompiler.Matlab
             if (_validations.ContainsKey(production))
             {
                 List<Token> tokenList = tokens.ToList();
-                return _validations[production].Evaluate(tokenList, _context);
+                return _validations[production].TrueForAll(validation => validation.Evaluate(tokenList, _context));
             }
             else return true;
         }

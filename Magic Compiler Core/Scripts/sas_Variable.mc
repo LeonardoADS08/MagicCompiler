@@ -5,10 +5,7 @@
         public string Name;
         public T Value;
         
-        public sas_Variable()
-        {
-
-        }
+        public sas_Variable() { }
 
         public sas_Variable(string name, T value)
         {

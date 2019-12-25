@@ -23,7 +23,11 @@
     <None Remove="Scripts\sas_Variable.mc" />
     <None Remove="Scripts\semanticParams.json" />
     <None Remove="Scripts\ss_Context.mc" />
+    <None Remove="Scripts\sv_MatrixAddition.mc" />
     <None Remove="Scripts\sv_MatrixDefinition.mc" />
+    <None Remove="Scripts\sv_MatrixDivision.mc" />
+    <None Remove="Scripts\sv_MatrixMultiply.mc" />
+    <None Remove="Scripts\sv_MatrixSubstract.mc" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,7 +67,19 @@
     <Content Include="Scripts\ss_Context.mc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\sv_MatrixAddition.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\sv_MatrixDefinition.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\sv_MatrixDivision.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\sv_MatrixMultiply.mc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\sv_MatrixSubstract.mc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -98,6 +114,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties scripts_4semanticparams_1json__JsonSchema="http://json-schema.org/draft-04/schema" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
