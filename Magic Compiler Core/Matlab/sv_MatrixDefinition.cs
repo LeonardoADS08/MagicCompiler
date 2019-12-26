@@ -9,12 +9,39 @@ namespace MagicCompiler.Matlab
 {
     public class sv_MatrixDefinition : ISemanticValidation
     {
-        public string[] Productions => new string[] { "matriz ::= [ seqelementos ; fila ]" };
+        public string[] Productions => new string[] { "matriz ::= [ seqelementos ; fila ]", "Matriz ::= [ SeqElementos ]" };
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
-        public bool Evaluate(List<Token> tokens, ss_Context context)
+        public bool Evaluate(List<Token> tokens)
         {
+            Stack<Token> tokenStack = new Stack<Token>(tokens);
+            List<Token> reductionTokens = new List<Token>();
+            bool finished = false;
+            while (!finished && tokenStack.Count != 0)
+            {
+                var peek = tokenStack.Pop();
+                // Matrix completed, check if is assignation
+                if (peek.IsSymbol(ss_Context.symbol_openBracket))
+                {
+                    reductionTokens.Add(peek);
+                    
+                    // is assignation?
+                    if (tokenStack.Peek().IsSymbol(ss_Context.symbol_equal))
+                    {
+                        reductionTokens.Add(tokenStack.Peek());
+                        tokenStack.Pop();
+                        reductionTokens.Add(tokenStack.Peek());
+                        
+                        
+                    }
+
+                    finished = true;
+                    break;
+                }
+                reductionTokens.Add(peek);
+            }
+
             // Check if it's an assignation
             string id = tokens.Find(t => t.IsSymbol(ss_Context.symbol_id)).Lexeme;
             bool isAssignation = id != null;
@@ -38,20 +65,6 @@ namespace MagicCompiler.Matlab
                     auxColumns = 0;
                     rows++;
                 }
-            }
-
-            if (isAssignation)
-            {
-                double[,] matrixValues = new double[rows, columns];
-                for (int i = 0; i < rows; i++)
-                    for (int j = 0; j < columns; j++)
-                        matrixValues[i, j] = values[i * rows + j];
-
-                context.Matrixes.Add(id, new sas_Variable<sas_Matrix<double>>()
-                {
-                    Name = id,
-                    Value = new sas_Matrix<double>(rows, columns, matrixValues)
-                });
             }
 
             return true;
