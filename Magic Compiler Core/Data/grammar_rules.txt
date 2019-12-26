@@ -1,10 +1,12 @@
-﻿Programa ::= SeqSentencias
+﻿# Core
+
+Programa ::= SeqSentencias
 Funcion ::= function ID = ID ( Parametros ) SeqSentencias End
 Funcion ::= function [ Parametros ] = ID ( Parametros ) SeqSentencias End
 Parametros ::= ID , Parametros
 Parametros ::= ID
-SeqSentencias ::= Sentencia
 SeqSentencias ::= Sentencia SeqSentencias
+SeqSentencias ::= Sentencia
 Valor ::= Constante
 Valor ::= ID
 Valor ::= Matriz
@@ -31,6 +33,10 @@ Fila ::= SeqElementos ;
 Fila ::= SeqElementos 
 Matriz ::= [ SeqElementos ]
 Matriz ::= [ SeqElementos ; Fila ]
+
+
+# Expresiones lógicas
+
 Sentencia ::= Condicional
 Sentencia ::= DefFor
 Sentencia ::= DefWhile
@@ -41,42 +47,39 @@ Condicional ::= if ( ExpLogica ) SeqSentencias end
 Condicional ::= if ( ExpLogica ) SeqSentencias else SeqSentencias end
 Condicional ::= if ( ExpLogica ) SeqSentencias elseif ( ExpLogica ) SeqSentencias end
 Condicional ::= if ( ExpLogica ) SeqSentencias elseif ( ExpLogica ) SeqSentencias else SeqSentencias end
-Asignacion ::= ID = ExpLogica
-ExpLogica ::= Operando
-Operando ::= True
-Operando ::= False
-Operando ::= Valor
-Operando ::= LlamadaFuncion
-Operando ::= ( Operando )
-Operando ::= Operando OpLog ExpLogica
-Operando ::= Operando OpLog Operando
-Operando ::= OpAritmetico OpLog Operando
-Operando ::= Operando OpLog OpAritmetico
-Operando ::= OpAritmetico OpLog OpAritmetico
-OpLog ::= &&
-OpLog ::= ||
-OpLog ::= <
-OpLog ::= >
-OpLog ::= >=
-OpLog ::= <=
-OpLog ::= ==
-OpLog ::= ~=
 Sentencia ::= ExpAritmetica
+Sentencia ::= ExpLogica
+Asignacion ::= ID = ExpLogica
 Asignacion ::= ID = ExpAritmetica
+
+
+#Expresiones Aritmeticas
+
 ExpAritmetica ::= Termino
-Termino ::= Valor
-Termino ::= LlamadaFuncion 
-Termino ::= ( Termino ) 
-Termino ::= Matriz OpAritmetico ExpAritmetica
-Termino ::= Termino OpAritmetico ExpAritmetica
-Termino ::= Termino OpAritmetico Termino
-OpAritmetico ::= +
-OpAritmetico ::= -
-OpAritmetico ::= *
-OpAritmetico ::= .*
-OpAritmetico ::= ./
-OpAritmetico ::= .\
-OpAritmetico ::= /
-OpAritmetico ::= \
-OpAritmetico ::= .^
-OpAritmetico ::= ^
+ExpAritmetica ::= ExpAritmetica + Termino
+ExpAritmetica ::= ExpAritmetica - Termino
+Termino ::= Factor
+Termino ::= Termino * Factor
+Termino ::= Termino .* Factor
+Termino ::= Termino ./ Factor
+Termino ::= Termino / Factor
+Termino ::= Termino \ Factor
+Termino ::= Termino .\ Factor
+Termino ::= Termino ^ Factor
+Termino ::= Termino .^ Factor
+Factor ::= Valor
+Factor ::= LlamadaFuncion
+Factor ::= ( ExpAritmetica )
+ExpLogica ::= Operando
+Comparacion ::= ExpAritmetica > ExpAritmetica 
+Comparacion ::= ExpAritmetica < ExpAritmetica 
+Comparacion ::= ExpAritmetica >= ExpAritmetica 
+Comparacion ::= ExpAritmetica <= ExpAritmetica 
+Operando ::= true
+Operando ::= false
+Operando ::= Comparacion
+Operando ::= ( ExpLogica )
+ExpLogica ::= ExpLogica && Operando
+ExpLogica ::= ExpLogica || Operando
+Operando ::= Operando && LlamadaFuncion
+Operando ::= Operando || LlamadaFuncion

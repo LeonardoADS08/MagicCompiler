@@ -46,13 +46,19 @@ namespace MagicCompiler.Grammar
 
         private const string RULE_LEFT_RIGHT_SEPARATOR = "::=";
         private const string INLINE_RULE_SEPARATOR = "@@";
+        private const string COMMENT_SYMBOL = "#";
 
         public Reader()
         {
             using (var reader = new StreamReader(FILE_DIRECTION_GRAMMAR_RULES))
             {
                 while (!reader.EndOfStream)
-                    _rawRules.Add(reader.ReadLine().Trim().ToLower());
+                {
+                    string line = reader.ReadLine();
+                    if (!line.StartsWith(COMMENT_SYMBOL) && !string.IsNullOrWhiteSpace(line))
+                        _rawRules.Add(line.Trim().ToLower());
+
+                }
             }
 
             using (var reader = new StreamReader(FILE_DIRECTION_GRAMMAR_CONFIGURATIONS))
@@ -85,7 +91,7 @@ namespace MagicCompiler.Grammar
             List<string> leftRight = new List<string>(rule.Split(RULE_LEFT_RIGHT_SEPARATOR));
             string left = leftRight[0].Trim(); // added trim because it was reading an extra space char
 
-            List<string> right = new List<string>(leftRight[1].Split(INLINE_RULE_SEPARATOR));
+             List<string> right = new List<string>(leftRight[1].Split(INLINE_RULE_SEPARATOR));
             for (int j = 0; j < right.Count; j++)
             {
                 Production duaLipaNewRule = new Production() { Left = left };
