@@ -13,7 +13,7 @@ namespace MagicCompiler.Matlab
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
-        public bool Evaluate(List<Token> tokens)
+        public SemanticAnswer Evaluate(List<Token> tokens)
         {
             Stack<Token> tokenStack = new Stack<Token>(tokens);
             List<Token> reductionTokens = new List<Token>();
@@ -21,53 +21,31 @@ namespace MagicCompiler.Matlab
             while (!finished && tokenStack.Count != 0)
             {
                 var peek = tokenStack.Pop();
-                // Matrix completed, check if is assignation
                 if (peek.IsSymbol(ss_Context.symbol_openBracket))
-                {
-                    reductionTokens.Add(peek);
-                    
-                    // is assignation?
-                    if (tokenStack.Peek().IsSymbol(ss_Context.symbol_equal))
-                    {
-                        reductionTokens.Add(tokenStack.Peek());
-                        tokenStack.Pop();
-                        reductionTokens.Add(tokenStack.Peek());
-                        
-                        
-                    }
-
                     finished = true;
-                    break;
-                }
                 reductionTokens.Add(peek);
             }
-
-            // Check if it's an assignation
-            string id = tokens.Find(t => t.IsSymbol(ss_Context.symbol_id)).Lexeme;
-            bool isAssignation = id != null;
-            List<double> values = new List<double>();
-            double auxValue;
+            if (!finished) return new SemanticAnswer(false, "Matrix definition not found (Parsing error?)");
+            reductionTokens.Reverse();
 
             // Check if matrix is correctly defined
             int rows = 0, columns = -1, auxColumns = 0;
-            for (int i = 0; i < tokens.Count; i++)
+            for (int i = 0; i < reductionTokens.Count; i++)
             {
-                if (tokens[i].IsSymbol(ss_Context.symbol_constant))
+                if (reductionTokens[i].IsSymbol(ss_Context.symbol_constant))
                 {
                     auxColumns++;
-                    if (isAssignation && Double.TryParse(tokens[i].Lexeme, out auxValue)) values.Add(auxValue);
-                    else return false;
                 }
-                else if (tokens[i].IsSymbol(ss_Context.symbol_closeBracket, ss_Context.symbol_semicolon))
+                else if (reductionTokens[i].IsSymbol(ss_Context.symbol_closeBracket, ss_Context.symbol_semicolon))
                 {
                     if (columns == -1) columns = auxColumns;
-                    if (columns != auxColumns) return false;
+                    if (columns != auxColumns) return new SemanticAnswer(false, "Matrix column count not matching");
                     auxColumns = 0;
                     rows++;
                 }
             }
 
-            return true;
+            return new SemanticAnswer(true, "OK");
         }
 
     }

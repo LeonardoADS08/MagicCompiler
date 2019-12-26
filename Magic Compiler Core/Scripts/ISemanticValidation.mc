@@ -10,6 +10,6 @@ namespace MagicCompiler.Matlab
     {
         string[] Productions { get; }
         bool ValidProduction(Production production);
-        bool Evaluate(List<Token> tokens, ss_Context context);
+        SemanticAnswer Evaluate(List<Token> tokens);
     }
 }

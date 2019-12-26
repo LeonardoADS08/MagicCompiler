@@ -34,25 +34,42 @@ Matriz ::= [ SeqElementos ; Fila ]
 Sentencia ::= Condicional
 Sentencia ::= DefFor
 Sentencia ::= DefWhile
-Sentencia ::= Expresion
 DefFor ::= for ID = Valor : Valor SeqSentencias end
-DefWhile ::= While Expresion SeqSentencias end
-Condicional ::= if ( Expresion ) end
-Condicional ::= if ( Expresion ) SeqSentencias end
-Condicional ::= if ( Expresion ) SeqSentencias else SeqSentencias end
-Condicional ::= if ( Expresion ) SeqSentencias elseif ( Expresion ) SeqSentencias end
-Condicional ::= if ( Expresion ) SeqSentencias elseif ( Expresion ) SeqSentencias else SeqSentencias end
-Asignacion ::= ID = Expresion
-Expresion ::= Operando
+DefWhile ::= While ExpLogica SeqSentencias end
+Condicional ::= if ( ExpLogica ) end
+Condicional ::= if ( ExpLogica ) SeqSentencias end
+Condicional ::= if ( ExpLogica ) SeqSentencias else SeqSentencias end
+Condicional ::= if ( ExpLogica ) SeqSentencias elseif ( ExpLogica ) SeqSentencias end
+Condicional ::= if ( ExpLogica ) SeqSentencias elseif ( ExpLogica ) SeqSentencias else SeqSentencias end
+Asignacion ::= ID = ExpLogica
+ExpLogica ::= Operando
 Operando ::= True
 Operando ::= False
 Operando ::= Valor
 Operando ::= LlamadaFuncion
 Operando ::= ( Operando )
-Operando ::= Operando OpLog Expresion
+Operando ::= Operando OpLog ExpLogica
 Operando ::= Operando OpLog Operando
-Operando ::= Operando OpAritmetico Expresion
-Operando ::= Operando OpAritmetico Operando
+Operando ::= OpAritmetico OpLog Operando
+Operando ::= Operando OpLog OpAritmetico
+Operando ::= OpAritmetico OpLog OpAritmetico
+OpLog ::= &&
+OpLog ::= ||
+OpLog ::= <
+OpLog ::= >
+OpLog ::= >=
+OpLog ::= <=
+OpLog ::= ==
+OpLog ::= ~=
+Sentencia ::= ExpAritmetica
+Asignacion ::= ID = ExpAritmetica
+ExpAritmetica ::= Termino
+Termino ::= Valor
+Termino ::= LlamadaFuncion 
+Termino ::= ( Termino ) 
+Termino ::= Matriz OpAritmetico ExpAritmetica
+Termino ::= Termino OpAritmetico ExpAritmetica
+Termino ::= Termino OpAritmetico Termino
 OpAritmetico ::= +
 OpAritmetico ::= -
 OpAritmetico ::= *
@@ -63,11 +80,3 @@ OpAritmetico ::= /
 OpAritmetico ::= \
 OpAritmetico ::= .^
 OpAritmetico ::= ^
-OpLog ::= &&
-OpLog ::= ||
-OpLog ::= <
-OpLog ::= >
-OpLog ::= >=
-OpLog ::= <=
-OpLog ::= ==
-OpLog ::= ~=

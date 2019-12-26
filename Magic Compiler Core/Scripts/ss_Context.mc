@@ -12,16 +12,6 @@ namespace MagicCompiler.Matlab
         public const string symbol_openBracket = "[";
         public const string symbol_closeBracket = "]";
         public const string symbol_semicolon = ";";
-
-        public List<List<Token>> Tokens;
-        public Dictionary<string, sas_Variable<sas_Matrix<double>>> Matrixes;
-        public Dictionary<string, sas_Variable<string>> Strings;
-
-        public ss_Context()
-        {
-            Tokens = new List<List<Token>>();
-            Matrixes = new Dictionary<string, sas_Variable<sas_Matrix<double>>>();
-            Strings = new Dictionary<string, sas_Variable<string>>();
-        }
+        public const string symbol_equal = "=";
     }
 }

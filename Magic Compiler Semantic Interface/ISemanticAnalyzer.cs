@@ -9,6 +9,6 @@ namespace MagicCompiler.Semantic.Interfaces
     public interface ISemanticAnalyzer
     {
         bool RequiresEvaluation(Production reduceProduction);
-        bool Evaluate(Token[] tokens, Production reduceProduction);
+        SemanticAnswer Evaluate(List<Token> tokens, Production reduceProduction);
     }
 }

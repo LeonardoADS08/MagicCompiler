@@ -17,21 +17,15 @@ namespace MagicCompiler.Matlab
 {
     public class MatlabSemantic : ISemanticAnalyzer
     {
-        public ss_Context _context = new ss_Context();
         private Dictionary<string, List<ISemanticValidation>> _validations = new Dictionary<string, List<ISemanticValidation>>();
 
         public MatlabSemantic()
         {
             List<ISemanticValidation> validations = new List<ISemanticValidation>()
             {
-                new sv_MatrixDefinition(),
-                new sv_MatrixAddition(),
-                new sv_MatrixSubstract(),
-                new sv_MatrixMultiply(),
-                new sv_MatrixDivision()
+                new sv_MatrixDefinition()
             };
             validations.ForEach(validation => AddValidation(validation));
-
         }
 
         private void AddValidation(ISemanticValidation IValidation)
@@ -44,17 +38,25 @@ namespace MagicCompiler.Matlab
                     _validations[item] = new List<ISemanticValidation>() { IValidation };
             }
         }
+
         public bool RequiresEvaluation(Production reduceProduction) => _validations.ContainsKey(reduceProduction.ToString());
 
-        public bool Evaluate(Token[] tokens, Production reduceProduction)
+        public SemanticAnswer Evaluate(List<Token> tokens, Production reduceProduction)
         {
             string production = reduceProduction.ToString();
             if (_validations.ContainsKey(production))
             {
-                List<Token> tokenList = tokens.ToList();
-                return _validations[production].TrueForAll(validation => validation.Evaluate(tokenList, _context));
+                SemanticAnswer result = new SemanticAnswer();
+                result.Valid = _validations[production].TrueForAll(validation =>
+                {
+                    var evaluation = validation.Evaluate(tokens);
+                    result.Message += evaluation.Message + Environment.NewLine;
+                    return evaluation.Valid;
+                });
+                if (result.Valid) result.Message = "No semantic issues";
+                return result;
             }
-            else return true;
+            else return new SemanticAnswer(true, "No validation required");
         }
     }
 }

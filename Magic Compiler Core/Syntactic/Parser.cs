@@ -89,26 +89,24 @@ namespace MagicCompiler.Syntactic
                             if (state.Goto.ContainsKey(action.Reduce.Left))
                             {
                                 stateStack.Push(state.Goto[action.Reduce.Left]);
-                                if (false && _semanticAnalyzer.RequiresEvaluation(action.Reduce))
+                                if (_semanticAnalyzer.RequiresEvaluation(action.Reduce))
                                 {
-                                    Token lastToken;
-                                    if (usedTokens.Count != 0)
+                                    var tokens = new List<Token>(usedTokens);
+                                    tokens.RemoveAt(tokens.Count - 1);
+
+                                    var semanticResult = _semanticAnalyzer.Evaluate(usedTokens, action.Reduce); // SEMANTIC FAIL == FALSE || 
+
+                                    if (semanticResult.Valid)
                                     {
-                                        lastToken = usedTokens.Last();
-                                        usedTokens.Remove(lastToken);
+                                        Console.ForegroundColor = ConsoleColor.Blue;
+                                        Console.WriteLine("Semantic OK");
                                     }
-                                    
-                                    finish = !_semanticAnalyzer.Evaluate(usedTokens.ToArray(), action.Reduce); // SEMANTIC FAIL == FALSE || 
-                                    usedTokens.Clear();
-                                    if (usedTokens.Count == 0) usedTokens.Add(lastToken);
                                     else
                                     {
-                                        usedTokens.Clear();
-                                        usedTokens.Add(lastToken);
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine("Semantic Error on: {0}", action.Reduce.ToString());
                                     }
-
-                                    if (finish) Console.WriteLine("Semantic Error");
-                                    else Console.WriteLine("Semantic OK");
+                                    Console.ResetColor();
                                 }
                             }
                             else finish = true;

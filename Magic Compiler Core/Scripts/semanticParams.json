@@ -3,14 +3,8 @@
   "References": [],
   "Scripts": [
     "ISemanticValidation.mc",
-    "sas_Matrix.mc",
-    "sas_Variable.mc",
     "ss_Context.mc",
     "sv_MatrixDefinition.mc",
-    "sv_MatrixAddition.mc",
-    "sv_MatrixDivision.mc",
-    "sv_MatrixMultiply.mc",
-    "sv_MatrixSubstract.mc",
     "MatlabSemantic.mc"
   ]
 }

@@ -9,52 +9,43 @@ namespace MagicCompiler.Matlab
 {
     public class sv_MatrixDefinition : ISemanticValidation
     {
-        public string[] Productions => new string[] { "matriz ::= [ seqelementos ; fila ]" };
+        public string[] Productions => new string[] { "matriz ::= [ seqelementos ; fila ]", "Matriz ::= [ SeqElementos ]" };
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
-        public bool Evaluate(List<Token> tokens, ss_Context context)
+        public SemanticAnswer Evaluate(List<Token> tokens)
         {
-            // Check if it's an assignation
-            string id = tokens.Find(t => t.IsSymbol(ss_Context.symbol_id)).Lexeme;
-            bool isAssignation = id != null;
-            List<double> values = new List<double>();
-            double auxValue;
+            Stack<Token> tokenStack = new Stack<Token>(tokens);
+            List<Token> reductionTokens = new List<Token>();
+            bool finished = false;
+            while (!finished && tokenStack.Count != 0)
+            {
+                var peek = tokenStack.Pop();
+                if (peek.IsSymbol(ss_Context.symbol_openBracket))
+                    finished = true;
+                reductionTokens.Add(peek);
+            }
+            if (!finished) return new SemanticAnswer(false, "Matrix definition not found (Parsing error?)");
+            reductionTokens.Reverse();
 
             // Check if matrix is correctly defined
             int rows = 0, columns = -1, auxColumns = 0;
-            for (int i = 0; i < tokens.Count; i++)
+            for (int i = 0; i < reductionTokens.Count; i++)
             {
-                if (tokens[i].IsSymbol(ss_Context.symbol_constant))
+                if (reductionTokens[i].IsSymbol(ss_Context.symbol_constant))
                 {
                     auxColumns++;
-                    if (isAssignation && Double.TryParse(tokens[i].Lexeme, out auxValue)) values.Add(auxValue);
-                    else return false;
                 }
-                else if (tokens[i].IsSymbol(ss_Context.symbol_closeBracket, ss_Context.symbol_semicolon))
+                else if (reductionTokens[i].IsSymbol(ss_Context.symbol_closeBracket, ss_Context.symbol_semicolon))
                 {
                     if (columns == -1) columns = auxColumns;
-                    if (columns != auxColumns) return false;
+                    if (columns != auxColumns) return new SemanticAnswer(false, "Matrix column count not matching");
                     auxColumns = 0;
                     rows++;
                 }
             }
 
-            if (isAssignation)
-            {
-                double[,] matrixValues = new double[rows, columns];
-                for (int i = 0; i < rows; i++)
-                    for (int j = 0; j < columns; j++)
-                        matrixValues[i, j] = values[i * rows + j];
-
-                context.Matrixes.Add(id, new sas_Variable<sas_Matrix<double>>()
-                {
-                    Name = id,
-                    Value = new sas_Matrix<double>(rows, columns, matrixValues)
-                });
-            }
-
-            return true;
+            return new SemanticAnswer(true, "OK");
         }
 
     }

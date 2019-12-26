@@ -38,17 +38,25 @@ namespace MagicCompiler.Matlab
                     _validations[item] = new List<ISemanticValidation>() { IValidation };
             }
         }
+
         public bool RequiresEvaluation(Production reduceProduction) => _validations.ContainsKey(reduceProduction.ToString());
 
-        public bool Evaluate(Token[] tokens, Production reduceProduction)
+        public SemanticAnswer Evaluate(List<Token> tokens, Production reduceProduction)
         {
             string production = reduceProduction.ToString();
             if (_validations.ContainsKey(production))
             {
-                List<Token> tokenList = tokens.ToList();
-                return _validations[production].TrueForAll(validation => validation.Evaluate(tokenList));
+                SemanticAnswer result = new SemanticAnswer();
+                result.Valid = _validations[production].TrueForAll(validation =>
+                {
+                    var evaluation = validation.Evaluate(tokens);
+                    result.Message += evaluation.Message + Environment.NewLine;
+                    return evaluation.Valid;
+                });
+                if (result.Valid) result.Message = "No semantic issues";
+                return result;
             }
-            else return true;
+            else return new SemanticAnswer(true, "No validation required");
         }
     }
 }
