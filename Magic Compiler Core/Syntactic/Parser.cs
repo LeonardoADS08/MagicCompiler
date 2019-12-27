@@ -139,6 +139,13 @@ namespace MagicCompiler.Syntactic
                                         Console.WriteLine();
                                     }
                                 }
+
+                                if (false && _translator.RequiresTranslation(action.Reduce))
+                                {
+                                    var tokens = new List<Token>(usedTokens);
+                                    tokens.RemoveAt(tokens.Count - 1);
+                                    _translator.Translate(tokens, action.Reduce);
+                                }
                             }
                             else finish = true;
                             var tokensango = new List<Token>(usedTokens);

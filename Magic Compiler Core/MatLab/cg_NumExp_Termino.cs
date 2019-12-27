@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MagicCompiler.MatLab
 {
-    public class cg_NumExp_Constant : ICodeGenerator
+    public class cg_NumExp_Termino : ICodeGenerator
     {
         public string[] Productions => new string[]
         {
@@ -19,8 +19,14 @@ namespace MagicCompiler.MatLab
 
         public string Translate(List<Token> tokens, Production production)
         {
-            string res = tokens[tokens.Count - 1].Lexeme;
-            Context.Instance.Translations.Enqueue(res);
+            string prod = production.ToString();
+            string res = string.Empty;
+            if (prod == "termino ::= constante" || prod == "termino ::= id")
+            {
+                res = tokens[tokens.Count - 1].Lexeme;
+                Context.Instance.Translations.Enqueue(res);
+            }
+            
             return res;
         }
     }
