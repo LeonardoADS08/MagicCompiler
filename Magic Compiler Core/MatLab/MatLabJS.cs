@@ -57,15 +57,18 @@ namespace MagicCompiler.MatLab
 
         private void AddTranslation(ICodeGenerator translation)
         {
-            if (!_translations.ContainsKey(translation.Production))
+            foreach (var item in translation.Productions)
             {
-                _translations.Add(translation.Production, translation);
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Duplicated translation for: {0}", translation.Production);
-                Console.ResetColor();
+                if (!_translations.ContainsKey(item))
+                {
+                    _translations.Add(item, translation);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Duplicated translation for: {0}", item);
+                    Console.ResetColor();
+                }
             }
         }
 

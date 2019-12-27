@@ -9,7 +9,12 @@ namespace MagicCompiler.MatLab
 {
     public class cg_NumExp_Assignation : ICodeGenerator
     {
-        public string Production => "asignacion ::= termino";
+        public string[] Productions => new string[]
+        {
+            "asignacion ::= termino"
+        };
+
+        public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
         public string Translate(List<Token> tokens)
         {

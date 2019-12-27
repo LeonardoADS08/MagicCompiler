@@ -9,7 +9,13 @@ namespace MagicCompiler.MatLab
 {
     public class cg_NumExp_Constant : ICodeGenerator
     {
-        public string Production => "termino ::= constante";
+        public string[] Productions => new string[]
+        {
+            "termino ::= constante",
+            "termino ::= id"
+        };
+
+        public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
         public string Translate(List<Token> tokens)
         {

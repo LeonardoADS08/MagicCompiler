@@ -8,7 +8,8 @@ namespace MagicCompiler.MatLab
 {
     public interface ICodeGenerator
     {
-        string Production { get; }
+        string[] Productions { get; }
+        bool ValidProduction(Production production);
         string Translate(List<Token> tokens);
     }
 }

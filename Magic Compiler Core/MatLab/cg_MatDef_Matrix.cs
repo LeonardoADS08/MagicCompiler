@@ -9,7 +9,12 @@ namespace MagicCompiler.MatLab
 {
     public class cg_MatDef_Matrix : ICodeGenerator
     {
-        public string Production => "matriz ::= [ fila ]";
+        public string[] Productions => new string[]
+        {
+            "matriz ::= [ fila ]"
+        };
+
+        public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
         public string Translate(List<Token> tokens)
         {
