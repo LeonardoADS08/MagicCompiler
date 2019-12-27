@@ -39,7 +39,7 @@ namespace MagicCompiler.MatLab
 
             List<ICodeGenerator> translations = new List<ICodeGenerator>()
             {
-                
+                new cg_Matrix()
             };
             translations.ForEach(translation => AddTranslation(translation));
         }
@@ -90,12 +90,16 @@ namespace MagicCompiler.MatLab
             if (_translations.ContainsKey(production))
             {
                 string code = _translations[production].Translate(tokens);
-                using (StreamWriter writer = new StreamWriter(FILE_OUTPUT))
-                {
-                    writer.WriteLine(code);
-                }
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(code);
+                Console.ResetColor();
+//                 using (StreamWriter writer = new StreamWriter(FILE_OUTPUT))
+//                 {
+//                     writer.WriteLine(code);
+//                 }
             }
         }
+
     }
 }
 

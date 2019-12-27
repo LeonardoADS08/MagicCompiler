@@ -25,6 +25,7 @@ namespace MagicCompiler.MatLab
         public const string symbol_closeParenthesis = ")";
         public const string symbol_openBracket = "[";
         public const string symbol_closeBracket = "]";
+        public const string symbol_comma = ",";
         public const string symbol_semicolon = ";";
         public const string symbol_equal = "=";
         public const string symbol_function = "function";
@@ -32,8 +33,9 @@ namespace MagicCompiler.MatLab
         public const string symbol_if = "if";
         public const string symbol_for = "for";
         public const string symbol_end = "end";
-
+        
         public HashSet<string> Assignations = new HashSet<string>();
         public HashSet<string> Functions = new HashSet<string>();
+        public Queue<string> Translations = new Queue<string>();
     }
 }
