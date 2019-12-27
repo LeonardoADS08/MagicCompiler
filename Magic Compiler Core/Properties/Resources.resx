@@ -120,4 +120,22 @@
   <data name="Debug" xml:space="preserve">
     <value>true</value>
   </data>
+  <data name="Debug_Parser" xml:space="preserve">
+    <value>true</value>
+  </data>
+  <data name="Debug_Parser_Action" xml:space="preserve">
+    <value>true</value>
+  </data>
+  <data name="Debug_Parser_Stack" xml:space="preserve">
+    <value>false</value>
+  </data>
+  <data name="Debug_Parser_Token" xml:space="preserve">
+    <value>true</value>
+  </data>
+  <data name="Debug_Semantic" xml:space="preserve">
+    <value>true</value>
+  </data>
+  <data name="Debug_Table" xml:space="preserve">
+    <value>false</value>
+  </data>
 </root>

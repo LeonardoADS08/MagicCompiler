@@ -4,14 +4,15 @@ using System.Text;
 
 namespace MagicCompiler
 {
+    
     public struct SemanticAnswer
     {
-        public bool Valid;
+        public AnswerType AnswerType;
         public string Message;
 
-        public SemanticAnswer(bool valid, string message)
+        public SemanticAnswer(AnswerType answerType, string message)
         {
-            Valid = valid;
+            AnswerType = answerType;
             Message = message;
         }
     }

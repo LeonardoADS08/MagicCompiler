@@ -73,7 +73,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Magic Compiler Semantic Interface\Magic Compiler Semantic Interface.csproj" />
+    <ProjectReference Include="..\Magic Compiler Semantic Interface\Magic Compiler Interface.csproj" />
     <ProjectReference Include="..\Magic Compiler Structures\Magic Compiler Structures.csproj" />
   </ItemGroup>
 

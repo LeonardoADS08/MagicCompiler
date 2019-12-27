@@ -10,9 +10,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Magic Compiler", "Magic Com
 		{90E06AED-AB70-413F-9885-2E99D86CBC96} = {90E06AED-AB70-413F-9885-2E99D86CBC96}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Magic Compiler Semantic Interface", "Magic Compiler Semantic Interface\Magic Compiler Semantic Interface.csproj", "{ADBAFD16-A9C6-48ED-B84C-EC90722B3642}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Magic Compiler Interface", "Magic Compiler Semantic Interface\Magic Compiler Interface.csproj", "{ADBAFD16-A9C6-48ED-B84C-EC90722B3642}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic Compiler Structures", "Magic Compiler Structures\Magic Compiler Structures.csproj", "{FB2A3E3E-D0A4-4D7F-A45A-B4BECBDA1171}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Magic Compiler Structures", "Magic Compiler Structures\Magic Compiler Structures.csproj", "{FB2A3E3E-D0A4-4D7F-A45A-B4BECBDA1171}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

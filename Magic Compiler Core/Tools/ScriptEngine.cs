@@ -40,18 +40,21 @@ namespace MagicCompiler.Tools
             });
 
             string assemblyName = Path.GetRandomFileName();
+            string gcLocation = Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location);
             var refPaths = new List<string>(new[] {
-                typeof(System.Object).GetTypeInfo().Assembly.Location,
+                typeof(Object).GetTypeInfo().Assembly.Location,
                 typeof(IQueryable).GetTypeInfo().Assembly.Location,
                 typeof(Console).GetTypeInfo().Assembly.Location,
-                typeof(System.Linq.Enumerable).GetTypeInfo().Assembly.Location,
-                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.dll"),
-                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Core.dll"),
-                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Runtime.dll"),
-                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "System.Collections.dll"),
-                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "mscorlib.dll"),
-                Path.Combine(Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location), "netstandard.dll"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Magic Compiler Semantic Interface.dll"),
+                typeof(Enumerable).GetTypeInfo().Assembly.Location,
+                Path.Combine(gcLocation, "System.dll"),
+                Path.Combine(gcLocation, "System.Core.dll"),
+                Path.Combine(gcLocation, "System.IO.dll"),
+                Path.Combine(gcLocation, "System.Runtime.dll"),
+                Path.Combine(gcLocation, "System.Runtime.Extensions.dll"),
+                Path.Combine(gcLocation, "System.Collections.dll"),
+                Path.Combine(gcLocation, "mscorlib.dll"),
+                Path.Combine(gcLocation, "netstandard.dll"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Magic Compiler Interface.dll"),
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Magic Compiler Structures.dll")
             });
             refPaths.AddRange(_scriptParams.References);

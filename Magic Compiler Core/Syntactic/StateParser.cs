@@ -129,8 +129,12 @@ namespace MagicCompiler.Syntactic
         public string StateToString()
         {
             string res = "";
-            res += "State: " + State.Order;
-            res += "\r\nAction: \r\n";
+            res += "State: " + State.Order + ":" + Environment.NewLine;
+            foreach (var item in State.CurrentItems)
+            {
+                res += item.ToString() + Environment.NewLine;
+            }
+            res += "Action:" + Environment.NewLine;
             foreach (var action in Action)
             {
                 res += action.Key + " ->";
@@ -151,14 +155,14 @@ namespace MagicCompiler.Syntactic
                     default:
                         break;
                 }
-                res += "\r\n";
+                res += Environment.NewLine;
             }
             res += "Goto: ";
             foreach (var gotos in Goto)
             {
-                res += gotos.Key + " -> " + gotos.Value.Order + "\r\n";
+                res += gotos.Key + " -> " + gotos.Value.Order + Environment.NewLine;
             }
-            res += "\r\n";
+            res += Environment.NewLine;
             return res;
         }
 

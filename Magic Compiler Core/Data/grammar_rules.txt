@@ -1,85 +1,105 @@
 ﻿# Core
 
 Programa ::= SeqSentencias
-Funcion ::= function ID = ID ( Parametros ) SeqSentencias End
-Funcion ::= function [ Parametros ] = ID ( Parametros ) SeqSentencias End
-Parametros ::= ID , Parametros
-Parametros ::= ID
 SeqSentencias ::= Sentencia SeqSentencias
 SeqSentencias ::= Sentencia
-Valor ::= Constante
-Valor ::= ID
-Valor ::= Matriz
-Sentencia ::= Funcion
 Sentencia ::= Asignacion
+Asignacion ::= ID = ID
+Asignacion ::= ID = Constante
+
+
+# Definición de funciones
+
 Sentencia ::= LlamadaFuncion
-Asignacion ::= ID = Valor
+Sentencia ::= Funcion
 Asignacion ::= ID = LlamadaFuncion
 Asignacion ::= [ SeqID ] = LlamadaFuncion
-SeqID ::= ID 
+Funcion ::= function ID ( SeqID ) SeqSentencias End
+Funcion ::= function ID = ID ( SeqID ) SeqSentencias End
+Funcion ::= function [ Parametros ] = ID ( SeqID ) SeqSentencias End
 SeqID ::= ID , SeqID
+SeqID ::= ID 
 LlamadaFuncion ::= ID
 LlamadaFuncion ::= ID ( )
 LlamadaFuncion ::= ID ( Parametros )
-SeqElementos ::= Valor , SeqElementos 
-SeqElementos ::= LlamadaFuncion , SeqElementos 
-SeqElementos ::= ID , SeqElementos 
-SeqElementos ::= Matriz , SeqElementos 
-SeqElementos ::= Valor
-SeqElementos ::= LlamadaFuncion
-SeqElementos ::= ID
+Parametros ::= Parametros , Parametros
+Parametros ::= ID
+Parametros ::= Matriz
+Parametros ::= Constante
+
+# Definición de matrices
+
+Asignacion ::= ID = Matriz
+Matriz ::= [ Fila ]
 Fila ::= SeqElementos ; Fila
-Fila ::= SeqElementos ;
 Fila ::= SeqElementos 
-Matriz ::= [ SeqElementos ]
-Matriz ::= [ SeqElementos ; Fila ]
+SeqElementos ::= SeqElementos , SeqElementos 
+SeqElementos ::= LlamadaFuncion
+SeqElementos ::= Constante
+SeqElementos ::= ID
 
 
-# Expresiones lógicas
+# Estructuras de control
 
 Sentencia ::= Condicional
 Sentencia ::= DefFor
 Sentencia ::= DefWhile
-DefFor ::= for ID = Valor : Valor SeqSentencias end
-DefWhile ::= While ExpLogica SeqSentencias end
-Condicional ::= if ( ExpLogica ) end
-Condicional ::= if ( ExpLogica ) SeqSentencias end
-Condicional ::= if ( ExpLogica ) SeqSentencias else SeqSentencias end
-Condicional ::= if ( ExpLogica ) SeqSentencias elseif ( ExpLogica ) SeqSentencias end
-Condicional ::= if ( ExpLogica ) SeqSentencias elseif ( ExpLogica ) SeqSentencias else SeqSentencias end
-Sentencia ::= ExpAritmetica
-Sentencia ::= ExpLogica
-Asignacion ::= ID = ExpLogica
-Asignacion ::= ID = ExpAritmetica
+DefFor ::= for ID = Termino : Termino SeqSentencias End
+DefWhile ::= While Termino SeqSentencias End
+Condicional ::= if ( Termino ) End
+Condicional ::= if ( Termino ) SeqSentencias End
+Condicional ::= if ( Termino ) SeqSentencias else SeqSentencias End
+Condicional ::= if ( Termino ) SeqSentencias CondicionalAnidado End
+Condicional ::= if ( Termino ) SeqSentencias CondicionalAnidado else SeqSentencias End
+CondicionalAnidado ::= CondicionalAnidado elseif ( Termino ) SeqSentencias
+CondicionalAnidado ::= elseif ( Termino ) SeqSentencias
+
+# Expresiones numericas
+
+Asignacion ::= ID = Termino
+Termino ::= True
+Termino ::= False
+Termino ::= Constante
+Termino ::= Matriz
+Termino ::= ID
+Termino ::= LlamadaFuncion 
+Termino ::= ( Termino )  
+
+
+# Expresiones lógicas
+
+Termino ::= ExpLogica
+ExpLogica ::= ( ExpLogica )
+ExpLogica ::= True
+ExpLogica ::= False
+ExpLogica ::= Termino OpLog Termino
+ExpLogica ::= Termino OpLog ExpLogica
+ExpLogica ::= ExpLogica OpLog Termino
+OpLog ::= &&
+OpLog ::= ||
+OpLog ::= <
+OpLog ::= >
+OpLog ::= >=
+OpLog ::= <=
+OpLog ::= ==
+OpLog ::= ~=
 
 
 #Expresiones Aritmeticas
 
-ExpAritmetica ::= Termino
-ExpAritmetica ::= ExpAritmetica + Termino
-ExpAritmetica ::= ExpAritmetica - Termino
-Termino ::= Factor
-Termino ::= Termino * Factor
-Termino ::= Termino .* Factor
-Termino ::= Termino ./ Factor
-Termino ::= Termino / Factor
-Termino ::= Termino \ Factor
-Termino ::= Termino .\ Factor
-Termino ::= Termino ^ Factor
-Termino ::= Termino .^ Factor
-Factor ::= Valor
-Factor ::= LlamadaFuncion
-Factor ::= ( ExpAritmetica )
-ExpLogica ::= Operando
-Comparacion ::= ExpAritmetica > ExpAritmetica 
-Comparacion ::= ExpAritmetica < ExpAritmetica 
-Comparacion ::= ExpAritmetica >= ExpAritmetica 
-Comparacion ::= ExpAritmetica <= ExpAritmetica 
-Operando ::= true
-Operando ::= false
-Operando ::= Comparacion
-Operando ::= ( ExpLogica )
-ExpLogica ::= ExpLogica && Operando
-ExpLogica ::= ExpLogica || Operando
-Operando ::= Operando && LlamadaFuncion
-Operando ::= Operando || LlamadaFuncion
+Termino ::= ExpAritmetica
+ExpAritmetica ::= ( ExpAritmetica ) 
+ExpAritmetica ::= Termino OpAritmetico Termino
+ExpAritmetica ::= Termino OpAritmetico ExpAritmetica
+ExpAritmetica ::= ExpAritmetica OpAritmetico Termino
+OpAritmetico ::= +
+OpAritmetico ::= -
+OpAritmetico ::= *
+OpAritmetico ::= .*
+OpAritmetico ::= ./
+OpAritmetico ::= .\
+OpAritmetico ::= /
+OpAritmetico ::= \
+OpAritmetico ::= .^
+OpAritmetico ::= ^
+

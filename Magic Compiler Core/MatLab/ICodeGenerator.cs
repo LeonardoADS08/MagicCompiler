@@ -6,10 +6,10 @@ using System.Text;
 
 namespace MagicCompiler.MatLab
 {
-    public interface ISemanticValidation
+    public interface ICodeGenerator
     {
-        string[] Productions { get; }
+        string Production { get; }
         bool ValidProduction(Production production);
-        List<SemanticAnswer> Evaluate(List<Token> token);
+        string Translate(List<Token> tokens);
     }
 }

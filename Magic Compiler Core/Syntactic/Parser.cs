@@ -20,12 +20,19 @@ namespace MagicCompiler.Syntactic
         private ISemanticAnalyzer _semanticAnalyzer;
 
         public bool DEBUG => bool.Parse(Resources.Debug);
+        public bool DEBUG_TABLE => DEBUG && bool.Parse(Resources.Debug_Table);
+        public bool DEBUG_PARSER => DEBUG && bool.Parse(Resources.Debug_Parser);
+        public bool DEBUG_PARSER_ACTION => DEBUG_PARSER && bool.Parse(Resources.Debug_Parser_Action);
+        public bool DEBUG_PARSER_TOKEN => DEBUG_PARSER && bool.Parse(Resources.Debug_Parser_Token);
+        public bool DEBUG_PARSER_STACK => DEBUG_PARSER && bool.Parse(Resources.Debug_Parser_Stack);
+        public bool DEBUG_SEMANTIC => DEBUG && bool.Parse(Resources.Debug_Semantic);
 
         private bool _error = false;
         public Parser()
         {
-            var semanticScriptLoader = new SemanticScriptLoader();
-            if (semanticScriptLoader.Assembly == null)
+            //var semanticScriptLoader = new SemanticScriptLoader();
+            //if (semanticScriptLoader.Assembly == null)
+            if (false)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Errors on scripts, can't continue...");
@@ -34,15 +41,15 @@ namespace MagicCompiler.Syntactic
             }
             else
             {
-                _semanticAnalyzer = semanticScriptLoader.GetSemanticAnalyzer();
-                _semanticAnalyzer = new Matlab.MatlabSemantic();
+                //_semanticAnalyzer = semanticScriptLoader.GetSemanticAnalyzer();
+                _semanticAnalyzer = new MatLab.MatLabJS();
                 
                 _parsingTable = new ParsingTable();
                 _lexer = new Lexer();
                 _lexer.Analyze();
             }
 
-            if (DEBUG)
+            if (DEBUG_TABLE)
             {
                 //_parsingTable.PrintTable();
                 _parsingTable.SaveTable();
@@ -63,18 +70,18 @@ namespace MagicCompiler.Syntactic
             {
                 var state = _parsingTable.StateParser(stateStack.Peek());
 
-                if (DEBUG) DebugStack(stateStack);
+                if (DEBUG_PARSER_STACK) DebugStack(stateStack);
 
                 // Action
                 if (state.Action.ContainsKey(token.Symbol.TSymbol))
                 {
-                    if (DEBUG) DebugToken(token);
+                    if (DEBUG_PARSER_TOKEN) DebugToken(token);
 
                     var action = state.Action[token.Symbol.TSymbol];
                     switch (action.Type)
                     {
                         case ActionType.Shift:
-                            if (DEBUG) DebugAction(action, stateStack.Peek());
+                            if (DEBUG_PARSER_ACTION) DebugAction(action, stateStack.Peek());
                             stateStack.Push(action.Shift);
                             token = _lexer.Next();
                             usedTokens.Add(token);
@@ -84,7 +91,7 @@ namespace MagicCompiler.Syntactic
                                 stateStack.Pop();
                             state = _parsingTable.StateParser(stateStack.Peek());
 
-                            if (DEBUG) DebugAction(action, stateStack.Peek());
+                            if (DEBUG_PARSER_ACTION) DebugAction(action, stateStack.Peek());
 
                             if (state.Goto.ContainsKey(action.Reduce.Left))
                             {
@@ -94,32 +101,52 @@ namespace MagicCompiler.Syntactic
                                     var tokens = new List<Token>(usedTokens);
                                     tokens.RemoveAt(tokens.Count - 1);
 
-                                    var semanticResult = _semanticAnalyzer.Evaluate(usedTokens, action.Reduce); // SEMANTIC FAIL == FALSE || 
+                                    var semanticResult = _semanticAnalyzer.Evaluate(tokens, action.Reduce); // SEMANTIC FAIL == FALSE || 
 
-                                    if (semanticResult.Valid)
+                                    if (DEBUG_SEMANTIC)
                                     {
-                                        Console.ForegroundColor = ConsoleColor.Blue;
-                                        Console.WriteLine("Semantic OK");
+                                        Console.WriteLine();
+                                        Console.ForegroundColor = ConsoleColor.White;
+                                        Console.WriteLine("Semantic Analysis result:");
                                     }
-                                    else
+                                    
+                                    semanticResult.ForEach(result =>
                                     {
-                                        Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine("Semantic Error on: {0}", action.Reduce.ToString());
+                                        switch(result.AnswerType)
+                                        {
+                                            case AnswerType.Error:
+                                                Console.ForegroundColor = ConsoleColor.Red;
+                                                finish = true;
+                                                break;
+                                            case AnswerType.Warning:
+                                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                                break;
+                                            case AnswerType.Valid:
+                                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                                break;
+                                        }
+                                        if (DEBUG_SEMANTIC) Console.WriteLine(result.Message);
+
+                                    });
+                                    if (DEBUG_SEMANTIC)
+                                    {
+                                        Console.ResetColor();
+                                        Console.WriteLine();
                                     }
-                                    Console.ResetColor();
                                 }
                             }
                             else finish = true;
                             break;
                         case ActionType.Accept:
-                            if (DEBUG) DebugAction(action, stateStack.Peek());
+                            if (DEBUG_PARSER_ACTION) DebugAction(action, stateStack.Peek());
                             finish = true;
                             break;
                         case ActionType.Error:
-                            if (DEBUG) DebugAction(action, stateStack.Peek());
+                            if (DEBUG_PARSER_ACTION) DebugAction(action, stateStack.Peek());
                             finish = true;
                             break;
                     }
+                    if (DEBUG_PARSER) Console.WriteLine();
                 }
                 else // Unknown symbol, error
                 {
@@ -134,7 +161,7 @@ namespace MagicCompiler.Syntactic
         #region Tests
         private void DebugStack(Stack<State> stateStack)
         {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Stack : ");
             var stack = stateStack.ToList();
             stack.Reverse();
@@ -145,7 +172,7 @@ namespace MagicCompiler.Syntactic
 
         private void DebugToken(Token token)
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("Token : ");
             token.PrintTokenForParser();
             Console.ResetColor();
@@ -163,7 +190,7 @@ namespace MagicCompiler.Syntactic
                 case ActionType.Reduce:
                     if (state.Goto.ContainsKey(action.Reduce.Left))
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.Write("Reduce: ");
                         action.Reduce.PrintRule(false);
                         Console.WriteLine();

@@ -10,6 +10,20 @@ namespace MagicCompiler.Automaton
         public Production Production;
         public int DotPosition;
 
+        public override string ToString()
+        {
+            string res = Production.Left + " :== ";
+            for (int i = 0; i < Production.Right.Count + 1; i++)
+            {
+                if (i == DotPosition)
+                {
+                    res += "· ";
+                }
+                if (i < Production.Right.Count) res += Production.Right[i] + " ";
+            }
+            return res;
+        }
+
         #region Tests
         public void PrintItem()
         {

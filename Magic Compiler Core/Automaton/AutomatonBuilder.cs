@@ -161,8 +161,9 @@ namespace MagicCompiler.Automaton
 
             State actualState = new State()
             {
-                CurrentItems = currentItems
+                CurrentItems = currentItems.Distinct().ToList()
             };
+
             states.Add(actualState);
 
             List<Item> closure = new List<Item>();
