@@ -22,9 +22,7 @@ LlamadaFuncion ::= ID
 LlamadaFuncion ::= ID ( )
 LlamadaFuncion ::= ID ( Parametros )
 Parametros ::= Parametros , Parametros
-Parametros ::= ID
-Parametros ::= Matriz
-Parametros ::= Constante
+Parametros ::= Termino
 
 # MatDef Definición de matrices
 

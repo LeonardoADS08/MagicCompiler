@@ -107,7 +107,6 @@ namespace MagicCompiler.Syntactic
                                     tokens.RemoveAt(tokens.Count - 1);
 
                                     var semanticResult = _semanticAnalyzer.Evaluate(tokens, action.Reduce); // SEMANTIC FAIL == FALSE || 
-                                    _translator.Translate(tokens, action.Reduce);
 
                                     if (DEBUG_SEMANTIC)
                                     {
@@ -139,6 +138,13 @@ namespace MagicCompiler.Syntactic
                                         Console.ResetColor();
                                         Console.WriteLine();
                                     }
+                                }
+
+                                if (false && _translator.RequiresTranslation(action.Reduce))
+                                {
+                                    var tokens = new List<Token>(usedTokens);
+                                    tokens.RemoveAt(tokens.Count - 1);
+                                    _translator.Translate(tokens, action.Reduce);
                                 }
                             }
                             else finish = true;
