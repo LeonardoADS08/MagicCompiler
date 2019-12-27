@@ -6,7 +6,7 @@ SeqSentencias ::= Sentencia
 Sentencia ::= Asignacion
 
 
-# Definición de funciones
+# FuncDef Definición de funciones
 
 Sentencia ::= LlamadaFuncion
 Sentencia ::= Funcion
@@ -26,7 +26,7 @@ Parametros ::= ID
 Parametros ::= Matriz
 Parametros ::= Constante
 
-# Definición de matrices
+# MatDef Definición de matrices
 
 Matriz ::= [ Fila ]
 Fila ::= SeqElementos ; Fila
@@ -37,7 +37,7 @@ SeqElementos ::= Constante
 SeqElementos ::= ID
 
 
-# Estructuras de control
+# CtrlStr Estructuras de control
 
 Sentencia ::= Condicional
 Sentencia ::= DefFor
@@ -55,11 +55,9 @@ Condicional ::= IniCondicional SeqSentencias CondicionalAnidado else SeqSentenci
 CondicionalAnidado ::= CondicionalAnidado elseif ( Termino ) SeqSentencias
 CondicionalAnidado ::= elseif ( Termino ) SeqSentencias
 
-# Expresiones numericas
+# NumExp Expresiones numericas
 
 Asignacion ::= ID = Termino
-Termino ::= True
-Termino ::= False
 Termino ::= Constante
 Termino ::= Matriz
 Termino ::= ID
@@ -67,12 +65,11 @@ Termino ::= LlamadaFuncion
 Termino ::= ( Termino )  
 
 
-# Expresiones lógicas
+# LogExp Expresiones lógicas
 
 Termino ::= ExpLogica
 ExpLogica ::= ( ExpLogica )
-ExpLogica ::= True
-ExpLogica ::= False
+ExpLogica ::= Constante
 ExpLogica ::= Termino OpLog Termino
 ExpLogica ::= Termino OpLog ExpLogica
 ExpLogica ::= ExpLogica OpLog Termino
@@ -86,7 +83,7 @@ OpLog ::= ==
 OpLog ::= ~=
 
 
-#Expresiones Aritmeticas
+# AritExp Expresiones Aritmeticas
 
 Termino ::= ExpAritmetica
 ExpAritmetica ::= ( ExpAritmetica ) 

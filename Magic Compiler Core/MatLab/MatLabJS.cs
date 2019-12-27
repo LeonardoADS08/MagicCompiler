@@ -39,7 +39,7 @@ namespace MagicCompiler.MatLab
 
             List<ICodeGenerator> translations = new List<ICodeGenerator>()
             {
-                new cg_Matrix()
+                new cg_MatDef_Matrix()
             };
             translations.ForEach(translation => AddTranslation(translation));
         }

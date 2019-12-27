@@ -7,14 +7,14 @@ using System.Text;
 
 namespace MagicCompiler.MatLab
 {
-    public class cg_Assignation : ICodeGenerator
+    public class cg_NumExp_Assignation : ICodeGenerator
     {
         public string Production => "asignacion ::= termino";
 
         public string Translate(List<Token> tokens)
         {
             int index = tokens.FindLastIndex(Token => Token.IsSymbol(Context.symbol_equal)) - 1;
-            string res = string.Format("{0}={1}", tokens[index].Lexeme, Context.Instance.Translations.Dequeue());
+            string res = string.Format("var {0} = {1};", tokens[index].Lexeme, Context.Instance.Translations.Dequeue());
             Context.Instance.Translations.Enqueue(res);
             return res;
         }

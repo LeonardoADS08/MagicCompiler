@@ -1,5 +1,5 @@
-﻿True - ^\btrue\b$
-False - ^\bfalse\b$
+﻿Constante - ^\btrue\b$
+Constante - ^\bfalse\b$
 id - ^\b(\w*[A-Z]|[a-z]\w*)\b$
 Constante - ^([.]\d+|\d+[.]?\d*)$
 String - ^("(?:[^"\\]|\\"|\\)*")$

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MagicCompiler.MatLab
 {
-    public class cg_Matrix : ICodeGenerator
+    public class cg_MatDef_Matrix : ICodeGenerator
     {
         public string Production => "matriz ::= [ fila ]";
 

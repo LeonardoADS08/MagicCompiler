@@ -97,7 +97,7 @@ namespace MagicCompiler.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to false.
+        ///   Looks up a localized string similar to true.
         /// </summary>
         internal static string Debug_Parser_Token {
             get {

@@ -130,7 +130,7 @@
     <value>false</value>
   </data>
   <data name="Debug_Parser_Token" xml:space="preserve">
-    <value>false</value>
+    <value>true</value>
   </data>
   <data name="Debug_Semantic" xml:space="preserve">
     <value>true</value>
