@@ -97,7 +97,7 @@ namespace MagicCompiler.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to true.
+        ///   Looks up a localized string similar to false.
         /// </summary>
         internal static string Debug_Parser_Token {
             get {
@@ -120,6 +120,15 @@ namespace MagicCompiler.Properties {
         internal static string Debug_Table {
             get {
                 return ResourceManager.GetString("Debug_Table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to false.
+        /// </summary>
+        internal static string SemanticErrorStopsParser {
+            get {
+                return ResourceManager.GetString("SemanticErrorStopsParser", resourceCulture);
             }
         }
     }

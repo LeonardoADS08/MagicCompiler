@@ -13,7 +13,7 @@
 		ok()
 	end
 
-	[m,u,l,t,i] = multiAssignation(paramA, paramB)
+	[m,u,l,t,i] = multiAssignation()
 end
 
 if (true)

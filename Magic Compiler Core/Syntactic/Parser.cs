@@ -26,6 +26,8 @@ namespace MagicCompiler.Syntactic
         public bool DEBUG_PARSER_TOKEN => DEBUG_PARSER && bool.Parse(Resources.Debug_Parser_Token);
         public bool DEBUG_PARSER_STACK => DEBUG_PARSER && bool.Parse(Resources.Debug_Parser_Stack);
         public bool DEBUG_SEMANTIC => DEBUG && bool.Parse(Resources.Debug_Semantic);
+        public bool SEMANTIC_STOPS_PARSER => DEBUG && bool.Parse(Resources.SemanticErrorStopsParser);
+
 
         private bool _error = false;
         public Parser()
@@ -116,7 +118,7 @@ namespace MagicCompiler.Syntactic
                                         {
                                             case AnswerType.Error:
                                                 Console.ForegroundColor = ConsoleColor.Red;
-                                                finish = true;
+                                                if (SEMANTIC_STOPS_PARSER) finish = true;
                                                 break;
                                             case AnswerType.Warning:
                                                 Console.ForegroundColor = ConsoleColor.Yellow;

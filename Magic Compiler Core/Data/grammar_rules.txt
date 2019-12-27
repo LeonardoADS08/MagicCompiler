@@ -4,8 +4,6 @@ Programa ::= SeqSentencias
 SeqSentencias ::= Sentencia SeqSentencias
 SeqSentencias ::= Sentencia
 Sentencia ::= Asignacion
-Asignacion ::= ID = ID
-Asignacion ::= ID = Constante
 
 
 # Definición de funciones
@@ -14,9 +12,10 @@ Sentencia ::= LlamadaFuncion
 Sentencia ::= Funcion
 Asignacion ::= ID = LlamadaFuncion
 Asignacion ::= [ SeqID ] = LlamadaFuncion
-Funcion ::= function ID ( SeqID ) SeqSentencias End
-Funcion ::= function ID = ID ( SeqID ) SeqSentencias End
-Funcion ::= function [ Parametros ] = ID ( SeqID ) SeqSentencias End
+IniFuncion ::= function ID ( SeqID )
+IniFuncion ::= function ID = ID ( SeqID )
+IniFuncion ::= function [ Parametros ] = ID ( SeqID )
+Funcion ::= IniFuncion SeqSentencias End
 SeqID ::= ID , SeqID
 SeqID ::= ID 
 LlamadaFuncion ::= ID
@@ -29,7 +28,6 @@ Parametros ::= Constante
 
 # Definición de matrices
 
-Asignacion ::= ID = Matriz
 Matriz ::= [ Fila ]
 Fila ::= SeqElementos ; Fila
 Fila ::= SeqElementos 
@@ -44,13 +42,16 @@ SeqElementos ::= ID
 Sentencia ::= Condicional
 Sentencia ::= DefFor
 Sentencia ::= DefWhile
-DefFor ::= for ID = Termino : Termino SeqSentencias End
-DefWhile ::= While Termino SeqSentencias End
-Condicional ::= if ( Termino ) End
-Condicional ::= if ( Termino ) SeqSentencias End
-Condicional ::= if ( Termino ) SeqSentencias else SeqSentencias End
-Condicional ::= if ( Termino ) SeqSentencias CondicionalAnidado End
-Condicional ::= if ( Termino ) SeqSentencias CondicionalAnidado else SeqSentencias End
+IniFor ::= for ID = Termino : Termino
+DefFor ::=  IniFor SeqSentencias End
+IniWhile ::= While Termino
+DefWhile ::= IniWhile SeqSentencias End
+IniCondicional ::= if ( Termino )
+Condicional ::= IniCondicional End
+Condicional ::= IniCondicional SeqSentencias End
+Condicional ::= IniCondicional SeqSentencias else SeqSentencias End
+Condicional ::= IniCondicional SeqSentencias CondicionalAnidado End
+Condicional ::= IniCondicional SeqSentencias CondicionalAnidado else SeqSentencias End
 CondicionalAnidado ::= CondicionalAnidado elseif ( Termino ) SeqSentencias
 CondicionalAnidado ::= elseif ( Termino ) SeqSentencias
 
