@@ -10,6 +10,6 @@ namespace MagicCompiler.MatLab
     {
         string[] Productions { get; }
         bool ValidProduction(Production production);
-        string Translate(List<Token> tokens);
+        string Translate(List<Token> tokens, Production production);
     }
 }

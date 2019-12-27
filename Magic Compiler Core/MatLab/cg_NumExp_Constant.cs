@@ -17,7 +17,7 @@ namespace MagicCompiler.MatLab
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
-        public string Translate(List<Token> tokens)
+        public string Translate(List<Token> tokens, Production production)
         {
             string res = tokens[tokens.Count - 1].Lexeme;
             Context.Instance.Translations.Enqueue(res);

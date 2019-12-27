@@ -16,7 +16,7 @@ namespace MagicCompiler.MatLab
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
-        public string Translate(List<Token> tokens)
+        public string Translate(List<Token> tokens, Production production)
         {
             string res = "[[";
             int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_openBracket));

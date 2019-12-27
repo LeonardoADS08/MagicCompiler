@@ -92,7 +92,7 @@ namespace MagicCompiler.MatLab
             string production = reduceProduction.ToString();
             if (_translations.ContainsKey(production))
             {
-                string code = _translations[production].Translate(tokens);
+                string code = _translations[production].Translate(tokens, reduceProduction);
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine(code);
                 Console.ResetColor();
