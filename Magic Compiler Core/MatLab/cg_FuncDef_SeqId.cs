@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MagicCompiler.MatLab
 {
-    public class cg_SeqID : ICodeGenerator
+    public class cg_FuncDef_SeqID : ICodeGenerator
     {
         public string[] Productions => new string[]
         {

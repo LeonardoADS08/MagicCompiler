@@ -26,15 +26,20 @@ namespace MagicCompiler.MatLab
             string prod = production.ToString();
             string res = string.Empty;
             if (prod == "sentencia ::= asignacion" ||
-                prod == "sentencia ::= llamadafuncion" ||
-                prod == "sentencia ::= funcion")
+                prod == "sentencia ::= llamadafuncion" )
             {
                 res = string.Format("{0};", Context.Instance.Translations.Pop());
+                if (Context.Instance.BlocskOpen > 0) Context.Instance.BlockTranslation.Enqueue(res);
+                else Context.Instance.FinalTranslation.Add(res);
             }
-            else res = Context.Instance.Translations.Pop();
-
-            if (Context.Instance.BlocskOpen > 0) Context.Instance.Translations.Push(res);
-            else Context.Instance.FinalTranslation.Add(res);
+            else
+            {
+                res = Context.Instance.Translations.Pop();
+                if (Context.Instance.BlocskOpen > 0) Context.Instance.Translations.Push(res);
+                else Context.Instance.FinalTranslation.Add(res);
+            }
+            
+            
             return res;
         }
     }

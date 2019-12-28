@@ -37,6 +37,7 @@ namespace MagicCompiler.MatLab
         public HashSet<string> Assignations = new HashSet<string>();
         public HashSet<string> Functions = new HashSet<string>();
         public Stack<string> Translations = new Stack<string>();
+        public Queue<string> BlockTranslation = new Queue<string>();
         public int BlocskOpen = 0;
         public List<string> FinalTranslation = new List<string>();
     }

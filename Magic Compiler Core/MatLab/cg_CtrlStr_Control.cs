@@ -29,39 +29,49 @@ namespace MagicCompiler.MatLab
         public string Translate(List<Token> tokens, Production production)
         {
             string prod = production.ToString();
-            string res = string.Empty;
+            string res = string.Empty, temp = string.Empty;
             if (prod == "inicondicional ::= if ( termino )")
             {
-                res = string.Format("if ({0}) ", Context.Instance.Translations.Pop()) + "{" + Environment.NewLine;
-                Context.Instance.Translations.Push(res);
+                res = string.Format("if ({0}) ", Context.Instance.Translations.Pop()) + "{";
+                if (Context.Instance.BlocskOpen > 0)
+                {
+                    temp = Context.Instance.Translations.Pop() + Environment.NewLine;
+                    while (Context.Instance.BlockTranslation.Count != 0)
+                    {
+                        temp += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
+                    }
+                    Context.Instance.Translations.Push(temp);
+                }
+                Context.Instance.Translations.Push(temp + res);
                 Context.Instance.BlocskOpen++;
             }
             else if (prod == "inifincondicional ::= else")
             {
-                while (Context.Instance.Translations.Count != 0)
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
                 {
-                    if (Context.Instance.Translations.Count == 1)
-                        res = res.Insert(0, Context.Instance.Translations.Pop());
-                    else 
-                        res += Context.Instance.Translations.Pop() + Environment.NewLine;
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
                 res += "} " + Environment.NewLine + "else {";
                 Context.Instance.Translations.Push(res);
             }
             else if (prod == "fincondicional ::= end")
             {
-                res = Context.Instance.Translations.Pop() + "}" + Environment.NewLine;
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
+                {
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
+                }
+                res += "}" + Environment.NewLine;
                 Context.Instance.Translations.Push(res);
                 Context.Instance.BlocskOpen--;
             }
             else if (prod == "fincondicional ::= inifincondicional seqsentencias end")
             {
-                while (Context.Instance.Translations.Count != 0)
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
                 {
-                    if (Context.Instance.Translations.Count == 1)
-                        res = res.Insert(0, Context.Instance.Translations.Pop() + Environment.NewLine);
-                    else
-                        res += Context.Instance.Translations.Pop() + Environment.NewLine;
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
                 res += "}" + Environment.NewLine;
                 Context.Instance.Translations.Push(res);
@@ -69,12 +79,10 @@ namespace MagicCompiler.MatLab
             }
             else if (prod == "inifincondicional seqsentencias end")
             {
-                while (Context.Instance.Translations.Count != 0)
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
                 {
-                    if (Context.Instance.Translations.Count == 1)
-                        res = res.Insert(0, Context.Instance.Translations.Pop());
-                    else
-                        res += Context.Instance.Translations.Pop() + Environment.NewLine;
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
                 res += "}" + Environment.NewLine;
                 Context.Instance.Translations.Push(res);
@@ -87,26 +95,20 @@ namespace MagicCompiler.MatLab
             }
             else if (prod == "condicional ::= inicondicional seqsentencias fincondicional")
             {
-                var last = Context.Instance.Translations.Pop();
-                while (Context.Instance.Translations.Count != 0)
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
                 {
-                    if (Context.Instance.Translations.Count == 1)
-                        res = res.Insert(0, Context.Instance.Translations.Pop());
-                    else 
-                        res += Context.Instance.Translations.Pop() + Environment.NewLine;
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
-                res += last;
                 Context.Instance.Translations.Push(res);
             }
             else if (prod == "inicondicionalanidado ::= elseif ( termino )")
             {
                 var last = Context.Instance.Translations.Pop();
-                while (Context.Instance.Translations.Count != 0)
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
                 {
-                    if (Context.Instance.Translations.Count == 1)
-                        res = res.Insert(0, Context.Instance.Translations.Pop());
-                    else 
-                        res += Context.Instance.Translations.Pop() + Environment.NewLine;
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
                 res += "} " + Environment.NewLine + "else if (" + last + ") {";
                 Context.Instance.Translations.Push(res);
@@ -114,23 +116,19 @@ namespace MagicCompiler.MatLab
             else if (prod == "condicionalanidado ::= inicondicionalanidado seqsentencias" ||
                      prod == "condicionalanidado ::= condicionalanidado inicondicionalanidado seqsentencias")
             {
-                while (Context.Instance.Translations.Count != 0)
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
                 {
-                    if (Context.Instance.Translations.Count == 1)
-                        res = res.Insert(0, Context.Instance.Translations.Pop() + Environment.NewLine);
-                    else 
-                        res += Context.Instance.Translations.Pop() + Environment.NewLine;
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
                 Context.Instance.Translations.Push(res);
             }
             else if (prod == "condicional ::= inicondicional seqsentencias condicionalanidado fincondicional")
             {
-                while (Context.Instance.Translations.Count != 0)
+                res = Context.Instance.Translations.Pop() + Environment.NewLine;
+                while (Context.Instance.BlockTranslation.Count != 0)
                 {
-                    if (Context.Instance.Translations.Count == 1)
-                        res = res.Insert(0, Context.Instance.Translations.Pop() + Environment.NewLine);
-                    else 
-                        res += Context.Instance.Translations.Pop() + Environment.NewLine;
+                    res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
                 res += "}";
                 Context.Instance.Translations.Push(res);

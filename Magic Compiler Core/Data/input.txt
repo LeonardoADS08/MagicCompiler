@@ -1,38 +1,30 @@
-﻿if (true)
-test()
-test()
-elseif (true)
-test_1()
-test_1()
-elseif (true)
-test_2()
-test_2()
-elseif (true)
-test_4()
-test_4()
-elseif (true)
-test_5()
-test_5()
-else
-test_3()
-test_3()
+﻿function Primerafuncion = Probar(paramA, paramB, paramC)
+
+	varGlobal = true
+
+	function [primero, segundo] = multiReturn(param1, param2)
+		a = param1 * param2
+		b = (param1 + a) ^ param2
+	end
+
+	function sinReturn(param1, param2)
+		if (param1 > param2)
+			varGlobal = false
+		else
+			varGlobal = true
+		end
+	end
+
+	if (true)
+	instruccion1()
+	instruccion2()
+	elseif (true)
+	instruccion3()
+	instruccion4()
+	else
+	instruccion5()
+	end
 end
 
-if (true)
-test()
-test()
-end
 
-if (false)
-test()
-test()
-else
-test()
-test()
-end
 
-if (ok)
-test()
-elseif (okeytwo)
-test()
-end
