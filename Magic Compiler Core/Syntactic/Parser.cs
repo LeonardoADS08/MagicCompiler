@@ -148,6 +148,10 @@ namespace MagicCompiler.Syntactic
                                 }
                             }
                             else finish = true;
+                            var tokensango = new List<Token>(usedTokens);
+                            tokensango.RemoveAt(tokensango.Count - 1);
+
+                            _translator.Translate(tokensango, action.Reduce);
                             break;
                         case ActionType.Accept:
                             if (DEBUG_PARSER_ACTION) DebugAction(action, stateStack.Peek());
