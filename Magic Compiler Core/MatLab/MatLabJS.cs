@@ -41,7 +41,9 @@ namespace MagicCompiler.MatLab
             {
                 new cg_MatDef_Matrix(),
                 new cg_NumExp_Termino(),
-                new cg_FuncDef_Llamada()
+                new cg_FuncDef_Llamada(),
+                new cg_Function(),
+                new cg_SeqId(),
             };
             translations.ForEach(translation => AddTranslation(translation));
         }

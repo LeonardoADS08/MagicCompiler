@@ -18,7 +18,7 @@ namespace MagicCompiler.MatLab
 
         public string Translate(List<Token> tokens, Production production)
         {
-            string res = "function";
+            string res = "function ";
             int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_function)) + 1;
 
 
@@ -26,17 +26,17 @@ namespace MagicCompiler.MatLab
             {
                 if (tokens[i].IsSymbol(Context.symbol_id))
                 {
-                    res += tokens[i].Lexeme;
+                    res += tokens[i].Lexeme + " ";
                 }
                 else if (tokens[i].IsSymbol(Context.symbol_openParenthesis))
                 {
-                    res += tokens[i].Lexeme;
-                    res += Context.Instance.Translations.Dequeue();
-
+                    res += tokens[i].Lexeme + " ";
+                    res += Context.Instance.Translations.Dequeue() + " ";
+                    i++;
                 }
                 else if (tokens[i].IsSymbol(Context.symbol_closeParenthesis))
                 {
-                    res += tokens[i].Lexeme;
+                    res += tokens[i].Lexeme +" ";
                 }
             }
             Context.Instance.Translations.Enqueue(res);

@@ -11,15 +11,19 @@ namespace MagicCompiler.MatLab
     {
         public string[] Productions => new string[]
         {
+            "iniseqid ::= id ,",
             "seqid ::= id , seqid",
-            "seqid ::= id" 
+            "seqid ::= id"
+            
+
         };
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
         public string Translate(List<Token> tokens, Production production)
         {
-            if (production.ToString() == "seqid ::= id , seqid")
+
+            if (production.ToString() == "iniseqid ::= id ,")
             {
                 string res = "";
                 int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
@@ -34,26 +38,31 @@ namespace MagicCompiler.MatLab
                     else if (tokens[i].IsSymbol(Context.symbol_comma))
                     {
                         res += tokens[i].Lexeme;
-                        res += Context.Instance.Translations.Dequeue();
 
                     }
-                    
+
                 }
                 Context.Instance.Translations.Enqueue(res);
                 return res;
             }
 
-            else
+            if (production.ToString() == "seqid ::= iniseqid  seqid")
+            {
+                string res = Context.Instance.Translations.Dequeue();
+                Context.Instance.Translations.Enqueue(res);
+                return res;
+            }
+
+            if(production.ToString() == "seqid ::= id")
             {
                 string res = "";
                 int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
-
 
                 for (int i = firstSymbolIndex; i < tokens.Count; i++)
                 {
                     if (tokens[i].IsSymbol(Context.symbol_id))
                     {
-                        res += tokens[i].Lexeme;
+                        res +=tokens[i].Lexeme + ", ";
                     }
                     
 
@@ -61,7 +70,7 @@ namespace MagicCompiler.MatLab
                 Context.Instance.Translations.Enqueue(res);
                 return res;
             }
-
+            return "fdf";
         }
 
 
