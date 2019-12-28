@@ -27,22 +27,24 @@ namespace MagicCompiler.MatLab
             string res = string.Empty;
             if (prod == "iniseqid ::= id ,")
             {
-                res = string.Format("{0},", Context.Instance.Translations.Pop());
+                int n = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
+                res += tokens[n].Lexeme + " , ";
                 Context.Instance.Translations.Push(res);
+
             }
             else if (prod == "seqid ::= id")
             {
-                res = string.Format("{0} ", Context.Instance.Translations.Pop());
+                res = string.Format("{0} ", tokens[tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id))]);
                 Context.Instance.Translations.Push(res);
             }
             else if (prod == "seqid ::= iniseqid id")
             {
-                res = string.Format("{1}{0}", Context.Instance.Translations.Pop(), Context.Instance.Translations.Pop());
+                res = string.Format(" {0} {1} ", Context.Instance.Translations.Pop(), tokens[tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id))].Lexeme);
                 Context.Instance.Translations.Push(res);
             }
             else if (prod == "seqid ::= seqid , id")
             {
-                res = string.Format("{1}, {0}", Context.Instance.Translations.Pop(), Context.Instance.Translations.Pop());
+                res = string.Format(" {0} , {1} ", Context.Instance.Translations.Pop(), tokens[tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id))].Lexeme);
                 Context.Instance.Translations.Push(res);
             }
             return res;

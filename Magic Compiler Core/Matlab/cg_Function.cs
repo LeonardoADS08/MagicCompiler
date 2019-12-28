@@ -11,36 +11,58 @@ namespace MagicCompiler.MatLab
     {
         public string[] Productions => new string[]
         {
-            "inifuncion ::= function id ( seqid )"
+            "inifuncion ::= function id ( seqid )",
+            "inifuncion ::= function id = id ( seqid )",
+            "inifuncion ::= function [ parametros ] = id ( seqid )",
+            "funcion ::= inifuncion seqsentencias end"
+
         };
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
         public string Translate(List<Token> tokens, Production production)
         {
-            string res = "function ";
-            int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_function)) + 1;
-
-
-            for (int i = firstSymbolIndex; i < tokens.Count; i++)
+            if (production.ToString() == "inifuncion ::= function id ( seqid )")
             {
-                if (tokens[i].IsSymbol(Context.symbol_id))
+                int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_function)) + 1;
+                int i;
+                string res = string.Format("function {0} ({1})", tokens[firstSymbolIndex].Lexeme, Context.Instance.Translations.Pop());
+                res += " {";
+                Context.Instance.Translations.Push(res);
+                return res;
+            }
+            if (production.ToString() == "inifuncion ::= function id = id ( seqid )")
+            {
+                int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_function)) + 1;
+                int i= firstSymbolIndex + 1;
+                while (tokens[i].IsSymbol(Context.symbol_id))
                 {
-                    res += tokens[i].Lexeme + " ";
-                }
-                else if (tokens[i].IsSymbol(Context.symbol_openParenthesis))
-                {
-                    res += tokens[i].Lexeme + " ";
-                    res += Context.Instance.Translations.Pop() + " ";
                     i++;
                 }
-                else if (tokens[i].IsSymbol(Context.symbol_closeParenthesis))
-                {
-                    res += tokens[i].Lexeme +" ";
-                }
+                i++;
+                string res = string.Format("function {0} = {1} ({2})", tokens[firstSymbolIndex].Lexeme,tokens[i].Lexeme, Context.Instance.Translations.Pop());
+                res += " {";
+                Context.Instance.Translations.Push(res);
+                return res;
             }
-            Context.Instance.Translations.Push(res);
-            return res;
+            if (production.ToString() == "inifuncion ::= function [ parametros ] = id ( seqid )")
+            {
+                int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
+               
+                string res = string.Format("function [{2}] = {1} ({0})", Context.Instance.Translations.Pop(), tokens[firstSymbolIndex].Lexeme, Context.Instance.Translations.Pop());
+                res += " {";
+                Context.Instance.Translations.Push(res);
+                return res;
+            }
+            if (production.ToString() == "funcion ::= inifuncion seqsentencias end")
+            {
+                int n = 0;
+                string res = string.Format("{1} {0}", Context.Instance.Translations.Pop(), Context.Instance.Translations.Pop());
+                res += "}";
+                Context.Instance.Translations.Push(res);
+                return res;
+            }
+            return "xd";
         }
 
 
