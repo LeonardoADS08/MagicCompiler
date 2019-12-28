@@ -24,7 +24,7 @@ namespace MagicCompiler.MatLab
             if (prod == "termino ::= constante" || prod == "termino ::= id")
             {
                 res = tokens[tokens.Count - 1].Lexeme;
-                Context.Instance.Translations.Enqueue(res);
+                Context.Instance.Translations.Push(res);
             }
             
             return res;

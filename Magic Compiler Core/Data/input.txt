@@ -6,6 +6,3 @@ d = funcion_1()
 e = funcion_2(1, 2)
 f = funcion_3(a, 1)
 g = funcion_4(a, 2, [1, 2, 3])
-
-h = 1 + a
-i = a > b

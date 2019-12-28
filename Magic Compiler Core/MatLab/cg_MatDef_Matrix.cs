@@ -38,7 +38,7 @@ namespace MagicCompiler.MatLab
                 }
             }
             res = string.Format("math.matrix({0})", res);
-            Context.Instance.Translations.Enqueue(res);
+            Context.Instance.Translations.Push(res);
             return res;
         }
 

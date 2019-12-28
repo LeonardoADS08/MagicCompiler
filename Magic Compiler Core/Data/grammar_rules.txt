@@ -18,11 +18,13 @@ IniFuncion ::= function [ Parametros ] = ID ( SeqID )
 Funcion ::= IniFuncion SeqSentencias End
 SeqID ::= ID , SeqID
 SeqID ::= ID 
-LlamadaFuncion ::= ID
 LlamadaFuncion ::= ID ( )
-LlamadaFuncion ::= ID ( Parametros )
-Parametros ::= Parametros , Parametros
+LlamadaFuncion ::= IniLlamadaFunc Parametros )
+IniLlamadaFunc ::= ID (
+Parametros ::= Parametros , Termino
+Parametros ::= IniParametros Termino
 Parametros ::= Termino
+IniParametro ::= Termino ,
 
 # MatDef Definición de matrices
 

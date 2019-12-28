@@ -140,7 +140,7 @@ namespace MagicCompiler.Syntactic
                                     }
                                 }
 
-                                if (false && _translator.RequiresTranslation(action.Reduce))
+                                if (_translator.RequiresTranslation(action.Reduce))
                                 {
                                     var tokens = new List<Token>(usedTokens);
                                     tokens.RemoveAt(tokens.Count - 1);

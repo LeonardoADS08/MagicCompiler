@@ -41,7 +41,9 @@ namespace MagicCompiler.MatLab
             {
                 new cg_MatDef_Matrix(),
                 new cg_NumExp_Termino(),
-                new cg_FuncDef_Llamada()
+                new cg_FuncDef_Llamada(),
+                new cg_FuncDef_Parameters(),
+                new cg_NumExp_Assignation()
             };
             translations.ForEach(translation => AddTranslation(translation));
         }
@@ -95,7 +97,7 @@ namespace MagicCompiler.MatLab
             if (_translations.ContainsKey(production))
             {
                 string code = _translations[production].Translate(tokens, reduceProduction);
-                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine(code);
                 Console.ResetColor();
 //                 using (StreamWriter writer = new StreamWriter(FILE_OUTPUT))

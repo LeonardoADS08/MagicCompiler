@@ -11,7 +11,8 @@ namespace MagicCompiler.MatLab
     {
         public string[] Productions => new string[]
         {
-            "asignacion ::= termino"
+            "asignacion ::= id = termino",
+            "asignacion ::= id = llamadaFuncion"
         };
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
@@ -19,8 +20,8 @@ namespace MagicCompiler.MatLab
         public string Translate(List<Token> tokens, Production production)
         {
             int index = tokens.FindLastIndex(Token => Token.IsSymbol(Context.symbol_equal)) - 1;
-            string res = string.Format("var {0} = {1};", tokens[index].Lexeme, Context.Instance.Translations.Dequeue());
-            Context.Instance.Translations.Enqueue(res);
+            string res = string.Format("var {0} = {1};", tokens[index].Lexeme, Context.Instance.Translations.Pop());
+            //Context.Instance.Translations.Push(res);
             return res;
         }
 
