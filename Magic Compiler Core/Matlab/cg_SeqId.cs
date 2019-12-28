@@ -34,12 +34,12 @@ namespace MagicCompiler.MatLab
                     else if (tokens[i].IsSymbol(Context.symbol_comma))
                     {
                         res += tokens[i].Lexeme;
-                        res += Context.Instance.Translations.Dequeue();
+                        res += Context.Instance.Translations.Pop();
 
                     }
                     
                 }
-                Context.Instance.Translations.Enqueue(res);
+                Context.Instance.Translations.Push(res);
                 return res;
             }
 
@@ -58,7 +58,7 @@ namespace MagicCompiler.MatLab
                     
 
                 }
-                Context.Instance.Translations.Enqueue(res);
+                Context.Instance.Translations.Push(res);
                 return res;
             }
 

@@ -20,7 +20,7 @@ namespace MagicCompiler.MatLab
         private Dictionary<string, List<ISemanticValidation>> _validations = new Dictionary<string, List<ISemanticValidation>>();
         private Dictionary<string, ICodeGenerator> _translations = new Dictionary<string, ICodeGenerator>();
 
-        private string FILE_OUTPUT => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Output/result.js");
+        private string FILE_OUTPUT => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"result.js");
 
         public MatLabJS()
         {
@@ -39,13 +39,23 @@ namespace MagicCompiler.MatLab
 
             List<ICodeGenerator> translations = new List<ICodeGenerator>()
             {
-                new cg_MatDef_Matrix(),
-                new cg_NumExp_Termino(),
+                new cg_AritExp_Operations(),
+                new cg_Core_Sentence(),
+                new cg_CtrlStr_Control(),
+                new cg_CtrlStr_Flow(),
                 new cg_FuncDef_Llamada(),
                 new cg_FuncDef_Parameters(),
-                new cg_NumExp_Assignation()
+                new cg_Function(),
+                new cg_LogExp_Operations(),
+                new cg_MatDef_Matrix(),
+                new cg_NumExp_Assignation(),
+                new cg_NumExp_Termino(),
+                new cg_SeqId()
             };
             translations.ForEach(translation => AddTranslation(translation));
+
+            StreamWriter writer = new StreamWriter(FILE_OUTPUT, false);
+            writer.Dispose();
         }
 
         private void AddValidation(ISemanticValidation IValidation)
@@ -100,10 +110,15 @@ namespace MagicCompiler.MatLab
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine(code);
                 Console.ResetColor();
-//                 using (StreamWriter writer = new StreamWriter(FILE_OUTPUT))
-//                 {
-//                     writer.WriteLine(code);
-//                 }
+                
+                using (StreamWriter writer = new StreamWriter(FILE_OUTPUT, true))
+                {
+                    while (Context.Instance.FinalTranslation.Count != 0)
+                    {
+                        writer.WriteLine(Context.Instance.FinalTranslation.First());
+                        Context.Instance.FinalTranslation.RemoveAt(0);
+                    }
+                }
             }
         }
 

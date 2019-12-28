@@ -25,7 +25,7 @@ namespace MagicCompiler.MatLab
             if (prod == "llamadafuncion ::= id ( )")
             {
                 var token = tokens.FindLast(token => token.IsSymbol(Context.symbol_id));
-                res = string.Format("{0}();", token.Lexeme);
+                res = string.Format("{0}()", token.Lexeme);
                 Context.Instance.Translations.Push(res);
             }
             else if (prod == "inillamadafunc ::= id (")
@@ -37,7 +37,7 @@ namespace MagicCompiler.MatLab
             }
             else if (prod == "llamadafuncion ::= inillamadafunc parametros )")
             {
-                res = string.Format("{1}{0});", Context.Instance.Translations.Pop(), Context.Instance.Translations.Pop());
+                res = string.Format("{1}{0})", Context.Instance.Translations.Pop(), Context.Instance.Translations.Pop());
                 Context.Instance.Translations.Push(res);
             }
             return res;

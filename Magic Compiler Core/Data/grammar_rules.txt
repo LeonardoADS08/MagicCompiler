@@ -42,18 +42,21 @@ SeqElementos ::= ID
 Sentencia ::= Condicional
 Sentencia ::= DefFor
 Sentencia ::= DefWhile
+DefFor ::= IniFor SeqSentencias End
 IniFor ::= for ID = Termino : Termino
-DefFor ::=  IniFor SeqSentencias End
-IniWhile ::= While Termino
 DefWhile ::= IniWhile SeqSentencias End
+IniWhile ::= While ( Termino )
+Condicional ::= IniCondicional FinCondicional
+Condicional ::= IniCondicional SeqSentencias FinCondicional
+Condicional ::= IniCondicional SeqSentencias CondicionalAnidado FinCondicional
+CondicionalAnidado ::= CondicionalAnidado IniCondicionalAnidado SeqSentencias
+CondicionalAnidado ::= IniCondicionalAnidado SeqSentencias
+IniCondicionalAnidado ::= elseif ( Termino )
 IniCondicional ::= if ( Termino )
-Condicional ::= IniCondicional End
-Condicional ::= IniCondicional SeqSentencias End
-Condicional ::= IniCondicional SeqSentencias else SeqSentencias End
-Condicional ::= IniCondicional SeqSentencias CondicionalAnidado End
-Condicional ::= IniCondicional SeqSentencias CondicionalAnidado else SeqSentencias End
-CondicionalAnidado ::= CondicionalAnidado elseif ( Termino ) SeqSentencias
-CondicionalAnidado ::= elseif ( Termino ) SeqSentencias
+FinCondicional ::= IniFinCondicional SeqSentencias end
+FinCondicional ::= End
+IniFinCondicional ::= else 
+
 
 # NumExp Expresiones numericas
 
@@ -70,9 +73,9 @@ Termino ::= ( Termino )
 Termino ::= ExpLogica
 ExpLogica ::= ( ExpLogica )
 ExpLogica ::= Constante
-ExpLogica ::= Termino OpLog Termino
-ExpLogica ::= Termino OpLog ExpLogica
-ExpLogica ::= ExpLogica OpLog Termino
+ExpLogica ::= IniExpLogica Termino
+IniExpLogica ::= Termino OpLog 
+IniExpLogica ::= ExpLogica OpLog
 OpLog ::= &&
 OpLog ::= ||
 OpLog ::= <
@@ -87,9 +90,9 @@ OpLog ::= ~=
 
 Termino ::= ExpAritmetica
 ExpAritmetica ::= ( ExpAritmetica ) 
-ExpAritmetica ::= Termino OpAritmetico Termino
-ExpAritmetica ::= Termino OpAritmetico ExpAritmetica
-ExpAritmetica ::= ExpAritmetica OpAritmetico Termino
+ExpAritmetica ::= IniExpAritmetica Termino
+IniExpAritmetica ::= Termino OpAritmetico
+IniExpAritmetica ::= ExpAritmetica OpAritmetico
 OpAritmetico ::= +
 OpAritmetico ::= -
 OpAritmetico ::= *

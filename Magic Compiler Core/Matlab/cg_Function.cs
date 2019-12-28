@@ -31,7 +31,7 @@ namespace MagicCompiler.MatLab
                 else if (tokens[i].IsSymbol(Context.symbol_openParenthesis))
                 {
                     res += tokens[i].Lexeme;
-                    res += Context.Instance.Translations.Dequeue();
+                    res += Context.Instance.Translations.Pop();
 
                 }
                 else if (tokens[i].IsSymbol(Context.symbol_closeParenthesis))
@@ -39,7 +39,7 @@ namespace MagicCompiler.MatLab
                     res += tokens[i].Lexeme;
                 }
             }
-            Context.Instance.Translations.Enqueue(res);
+            Context.Instance.Translations.Push(res);
             return res;
         }
 

@@ -1,8 +1,38 @@
-﻿a = [1, 2]
-b = [1]
-c = [ 1, 2, 3 ; 4, 5, 6 ]
-j = funcion_0
-d = funcion_1()
-e = funcion_2(1, 2)
-f = funcion_3(a, 1)
-g = funcion_4(a, 2, [1, 2, 3])
+﻿if (true)
+test()
+test()
+elseif (true)
+test_1()
+test_1()
+elseif (true)
+test_2()
+test_2()
+elseif (true)
+test_4()
+test_4()
+elseif (true)
+test_5()
+test_5()
+else
+test_3()
+test_3()
+end
+
+if (true)
+test()
+test()
+end
+
+if (false)
+test()
+test()
+else
+test()
+test()
+end
+
+if (ok)
+test()
+elseif (okeytwo)
+test()
+end
