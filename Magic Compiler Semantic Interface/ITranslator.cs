@@ -9,6 +9,6 @@ namespace MagicCompiler
     public interface ITranslator
     {
         bool RequiresTranslation(Production reduceProduction);
-        public void Translate(List<Token> tokens, Production reduceProduction);
+        void Translate(List<Token> tokens, Production reduceProduction);
     }
 }

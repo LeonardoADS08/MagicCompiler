@@ -11,9 +11,10 @@ namespace MagicCompiler.MatLab
     {
         public string[] Productions => new string[]
         {
-            "llamadafuncion ::= id",
-            "llamadafuncion ::= id ( )",
-            "llamadafuncion ::= id ( parametros )"
+            "parametros ::= parametros , termino",
+            "parametros ::= iniparametros termino",
+            "parametros ::= termino",
+            "iniparametro ::= termino ,"
         };
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
@@ -22,21 +23,25 @@ namespace MagicCompiler.MatLab
         {
             string prod = production.ToString();
             string res = string.Empty;
-            if (prod == "llamadafuncion ::= id")
+            if (prod == "iniparametro ::= termino ,")
             {
-                res = string.Format("{0}();", tokens[tokens.Count - 1].Lexeme);
-                Context.Instance.Translations.Enqueue(res);
+                res = string.Format("{0},", Context.Instance.Translations.Pop());
+                Context.Instance.Translations.Push(res);
             }
-            else if (prod == "llamadafuncion ::= id ( )")
+            else if (prod == "parametros ::= termino")
             {
-                var token = tokens.FindLast(token => token.IsSymbol(Context.symbol_id));
-                res = string.Format("{0}();", token.Lexeme);
+                res = string.Format("{0} ", Context.Instance.Translations.Pop());
+                Context.Instance.Translations.Push(res);
             }
-            else if (prod == "llamadafuncion ::= id ( parametros )")
+            else if (prod == "parametros::= iniparametros termino")
             {
-                var index = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_openParenthesis)) - 1;
-                var token = tokens[index];
-                res = string.Format("{0}({1});", token.Lexeme, Context.Instance.Translations.Dequeue());
+                res = string.Format("{1}{0}", Context.Instance.Translations.Pop(), Context.Instance.Translations.Pop());
+                Context.Instance.Translations.Push(res);
+            }
+            else if (prod == "parametros ::= parametros , termino")
+            {
+                res = string.Format("{1}, {0}", Context.Instance.Translations.Pop(), Context.Instance.Translations.Pop());
+                Context.Instance.Translations.Push(res);
             }
             return res;
         }
