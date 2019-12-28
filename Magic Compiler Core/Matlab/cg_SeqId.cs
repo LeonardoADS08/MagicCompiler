@@ -7,63 +7,47 @@ using System.Text;
 
 namespace MagicCompiler.MatLab
 {
-    public class cg_SeqId : ICodeGenerator
+    public class cg_SeqID : ICodeGenerator
     {
         public string[] Productions => new string[]
         {
-            "seqid ::= id , seqid",
-            "seqid ::= id" 
+          "seqid ::= seqid , id",
+          "seqid ::= iniseqid id",
+          "seqid ::= id",
+          "iniseqid ::= id ,"
+          
+          
         };
 
         public bool ValidProduction(Production production) => Productions.Contains(production.ToString());
 
         public string Translate(List<Token> tokens, Production production)
         {
-            if (production.ToString() == "seqid ::= id , seqid")
+            string prod = production.ToString();
+            string res = string.Empty;
+            if (prod == "iniseqid ::= id ,")
             {
-                string res = "";
-                int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
-
-
-                for (int i = firstSymbolIndex; i < tokens.Count; i++)
-                {
-                    if (tokens[i].IsSymbol(Context.symbol_id))
-                    {
-                        res += tokens[i].Lexeme;
-                    }
-                    else if (tokens[i].IsSymbol(Context.symbol_comma))
-                    {
-                        res += tokens[i].Lexeme;
-                        res += Context.Instance.Translations.Pop();
-
-                    }
-                    
-                }
+                int n = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
+                res += tokens[n].Lexeme + " , ";
                 Context.Instance.Translations.Push(res);
-                return res;
-            }
 
-            else
+            }
+            else if (prod == "seqid ::= id")
             {
-                string res = "";
-                int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
-
-
-                for (int i = firstSymbolIndex; i < tokens.Count; i++)
-                {
-                    if (tokens[i].IsSymbol(Context.symbol_id))
-                    {
-                        res += tokens[i].Lexeme;
-                    }
-                    
-
-                }
+                res = string.Format("{0} ", tokens[tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id))]);
                 Context.Instance.Translations.Push(res);
-                return res;
             }
-
+            else if (prod == "seqid ::= iniseqid id")
+            {
+                res = string.Format(" {0} {1} ", Context.Instance.Translations.Pop(), tokens[tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id))].Lexeme);
+                Context.Instance.Translations.Push(res);
+            }
+            else if (prod == "seqid ::= seqid , id")
+            {
+                res = string.Format(" {0} , {1} ", Context.Instance.Translations.Pop(), tokens[tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id))].Lexeme);
+                Context.Instance.Translations.Push(res);
+            }
+            return res;
         }
-
-
     }
 }

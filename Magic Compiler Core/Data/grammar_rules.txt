@@ -16,8 +16,10 @@ IniFuncion ::= function ID ( SeqID )
 IniFuncion ::= function ID = ID ( SeqID )
 IniFuncion ::= function [ Parametros ] = ID ( SeqID )
 Funcion ::= IniFuncion SeqSentencias End
-SeqID ::= ID , SeqID
+SeqID ::= SeqID , ID
+SeqID ::= IniSeqID ID
 SeqID ::= ID 
+IniSeqID ::= ID ,
 LlamadaFuncion ::= ID ( )
 LlamadaFuncion ::= IniLlamadaFunc Parametros )
 IniLlamadaFunc ::= ID (
