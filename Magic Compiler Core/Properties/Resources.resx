@@ -127,7 +127,7 @@
     <value>true</value>
   </data>
   <data name="Debug_Parser_Stack" xml:space="preserve">
-    <value>false</value>
+    <value>true</value>
   </data>
   <data name="Debug_Parser_Token" xml:space="preserve">
     <value>true</value>
@@ -136,7 +136,7 @@
     <value>true</value>
   </data>
   <data name="Debug_Table" xml:space="preserve">
-    <value>false</value>
+    <value>true</value>
   </data>
   <data name="SemanticErrorStopsParser" xml:space="preserve">
     <value>false</value>

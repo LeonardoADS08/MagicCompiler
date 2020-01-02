@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MagicCompiler.Grammar
+namespace MagicCompiler.Grammars
 {
     /*  la 4-tupla de G=(Vt, Vn, P, S) donde:
         Vt = Conjunto finito de terminales
@@ -12,70 +12,22 @@ namespace MagicCompiler.Grammar
         P = Conjunto finito de producciones
         S ∈ Vn = Simbolo inicial
     */
-    internal class CFG
+    public class LRGrammar : Grammar
     {
-        #region Singleton
-        private static CFG _instance;
-        public static CFG Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    Reader reader = new Reader();
-                    _instance = reader.Build();
-                }
-                return _instance;
-            }
-        }
-        #endregion
-
         public CFGConfig Configuration;
-        public List<Production> Productions = new List<Production>();
+        
+        public List<Production> _productions;
 
-        private List<string> _terminals;
-        private List<string> _nonTerminals;
+        public override List<Production> Productions => _productions;
+        public override Production AugmentedGrammar => Configuration.AugmentedGrammar;
 
-        private Dictionary<string, List<string>> _first;
-        private Dictionary<string, List<string>> _follow;
 
-        public List<string> Terminals
+        public LRGrammar()
         {
-            get
-            {
-                if (_terminals == null) CategorizeSymbols();
-
-                return _terminals;
-            }
-        }
-
-        public List<string> NonTerminals
-        {
-            get
-            {
-                if (_nonTerminals == null) CategorizeSymbols();
-
-                return _nonTerminals;
-            }
-        }
-
-        public Dictionary<string, List<string>> First
-        {
-            get
-            {
-                if (_first == null) CalculateFirst();
-                return _first;
-            }
-        }
-
-        public Dictionary<string, List<string>> Follow
-        {
-            get
-            {
-                if (_first == null) CalculateFirst();
-                if (_follow == null) CalculateFollow();
-                return _follow;
-            }
+            _productions = new List<Production>();
+            LRReader reader = new LRReader();
+            reader.Build(this);
+            ExtendGrammar();
         }
 
         public void ExtendGrammar()
@@ -84,7 +36,7 @@ namespace MagicCompiler.Grammar
                 Productions.Add(Configuration.AugmentedGrammar);
         }
 
-        private void CategorizeSymbols()
+        protected override void CategorizeSymbols()
         {
             _nonTerminals = new List<string>();
 
@@ -103,11 +55,11 @@ namespace MagicCompiler.Grammar
             _terminals = symbols.ToList().Except(_nonTerminals).ToList();
         }
 
-        public bool IsTerminal(string symbol) => Terminals.Contains(symbol);
+        public override bool IsTerminal(string symbol) => Terminals.Contains(symbol);
 
-        public bool IsNonTerminal(string symbol) => NonTerminals.Contains(symbol);
+        public override bool IsNonTerminal(string symbol) => NonTerminals.Contains(symbol);
 
-        private void CalculateFirst()
+        protected override void CalculateFirst()
         {
             _first = new Dictionary<string, List<string>>();
 
@@ -173,7 +125,7 @@ namespace MagicCompiler.Grammar
             return _first[production.Left];
         }
 
-        private void CalculateFollow()
+        protected override void CalculateFollow()
         {
             _follow = new Dictionary<string, List<string>>();
             

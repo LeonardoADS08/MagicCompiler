@@ -1,10 +1,11 @@
-﻿function Primerafuncion = Probar(paramA, paramB, paramC)
+﻿function valorRetorno = Probar(paramA, paramB, paramC)
 
 	varGlobal = true
+	valorRetorno = true
 
 	function [primero, segundo] = multiReturn(param1, param2)
-		a = param1 * param2
-		b = (param1 + a) ^ param2
+		primero = param1 * param2
+		segundo = (param1 + a) ^ param2
 	end
 
 	function sinReturn(param1, param2)

@@ -88,7 +88,7 @@ namespace MagicCompiler.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to false.
+        ///   Looks up a localized string similar to true.
         /// </summary>
         internal static string Debug_Parser_Stack {
             get {
@@ -115,7 +115,7 @@ namespace MagicCompiler.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to false.
+        ///   Looks up a localized string similar to true.
         /// </summary>
         internal static string Debug_Table {
             get {

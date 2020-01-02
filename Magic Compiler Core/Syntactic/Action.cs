@@ -1,5 +1,5 @@
 ﻿using MagicCompiler.Automaton;
-using MagicCompiler.Grammar;
+using MagicCompiler.Grammars;
 using MagicCompiler.Structures.Grammar;
 using System;
 using System.Collections.Generic;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MagicCompiler.Lexical
 {
-    internal struct TokenizerAnswer
+    public struct TokenizerAnswer
     {
         private readonly static TokenizerAnswer _instanceNullAnswer = new TokenizerAnswer(false, Token.NULL_TOKEN);
         public static TokenizerAnswer NULL_ANSWER => _instanceNullAnswer;

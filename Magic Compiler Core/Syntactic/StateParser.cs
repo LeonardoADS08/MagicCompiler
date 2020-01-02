@@ -1,5 +1,5 @@
 ﻿using MagicCompiler.Automaton;
-using MagicCompiler.Grammar;
+using MagicCompiler.Grammars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +13,18 @@ namespace MagicCompiler.Syntactic
         public Dictionary<string, Action> Action = new Dictionary<string, Action>();
         public Dictionary<string, State> Goto = new Dictionary<string, State>();
 
-        public StateParser(State state, CFG KGrammar)
+        public StateParser(State state, IGrammar grammar)
         {
             State = state;
 
             // Shift or Goto
             foreach (var gotoState in State.Goto)
             {
-                if (KGrammar.IsNonTerminal(gotoState.Key))
+                if (grammar.IsNonTerminal(gotoState.Key))
                 {
                     Goto.Add(gotoState.Key, gotoState.Value);
                 }
-                else if (KGrammar.IsTerminal(gotoState.Key))
+                else if (grammar.IsTerminal(gotoState.Key))
                 {
                     Action.Add(gotoState.Key, new Action()
                     {
@@ -39,7 +39,7 @@ namespace MagicCompiler.Syntactic
             state.CurrentItems.ForEach(item =>
             {
                 // ACCEPT!
-                if (item.Production == KGrammar.Configuration.AugmentedGrammar && item.DotPosition >= item.Production.Right.Count)
+                if (item.Production == grammar.AugmentedGrammar && item.DotPosition >= item.Production.Right.Count)
                 {
                     Action.Add(item.Production.Left, new Action()
                     {
@@ -52,7 +52,7 @@ namespace MagicCompiler.Syntactic
                 // REDUCE!
                 if (item.DotPosition >= item.Production.Right.Count)
                 {
-                    var followSymbols = KGrammar.Follow[item.Production.Left];
+                    var followSymbols = grammar.Follow[item.Production.Left];
                     followSymbols.ForEach(symbol =>
                     {
                         if (!Action.ContainsKey(symbol))
@@ -68,8 +68,8 @@ namespace MagicCompiler.Syntactic
                 }
             });
 
-            var terminalsAndAccepted = new List<string>(KGrammar.Terminals);
-            terminalsAndAccepted.Add(KGrammar.Configuration.AugmentedGrammar.Left);
+            var terminalsAndAccepted = new List<string>(grammar.Terminals);
+            terminalsAndAccepted.Add(grammar.AugmentedGrammar.Left);
             terminalsAndAccepted.ForEach(symbol =>
             {
                 if (!Action.ContainsKey(symbol))

@@ -1,4 +1,7 @@
-﻿using MagicCompiler.Syntactic;
+﻿using MagicCompiler;
+using MagicCompiler.Grammars;
+using MagicCompiler.Lexical;
+using MagicCompiler.Syntactic;
 using System.Collections.Generic;
 
 namespace Magic_Compiler
@@ -7,8 +10,12 @@ namespace Magic_Compiler
     {
         static void Main(string[] args)
         {
-            Parser parser = new Parser();
-            parser.Check();
+            var grammar = new LRGrammar();
+            var tokenizer = new Tokenizer();
+            var lexer = new LexerMC(grammar, tokenizer);
+            var parser = new LRParser(lexer, grammar);
+            var Compiler = new MagicCompiler.Compiler(lexer, parser);
+            Compiler.Compile();
         }
     }
 }

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MagicCompiler
+namespace MagicCompiler.Syntactic
 {
-    public enum AnswerType
+    public interface IParser
     {
-        Valid, Error, Warning
+        bool Check();
     }
 }

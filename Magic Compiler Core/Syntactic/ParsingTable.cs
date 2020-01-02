@@ -1,5 +1,5 @@
 ﻿using MagicCompiler.Automaton;
-using MagicCompiler.Grammar;
+using MagicCompiler.Grammars;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,13 +10,13 @@ namespace MagicCompiler.Syntactic
     internal class ParsingTable : List<StateParser>
     {
         public State InitialState;
-        public ParsingTable()
+        public ParsingTable(IGrammar grammar)
         {
-            AutomatonBuilder automaton = new AutomatonBuilder();
+            AutomatonBuilderLR automaton = new AutomatonBuilderLR(grammar);
             automaton.Build();
             automaton.BFS(x =>
             {
-                this.Add(new StateParser(x, automaton.KGrammar));
+                this.Add(new StateParser(x, grammar));
             });
             InitialState = automaton.InitialState;
         }

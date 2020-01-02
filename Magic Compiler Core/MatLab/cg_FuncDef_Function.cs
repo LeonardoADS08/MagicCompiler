@@ -48,8 +48,8 @@ namespace MagicCompiler.MatLab
             {
                 int index = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_equal));
                 var firstToken = tokens[index - 1];
-                var secondToken = tokens[index +1];
-                res = string.Format("function {0} = {1} ({2})", firstToken.Lexeme, secondToken.Lexeme, Context.Instance.Translations.Pop());
+                var secondToken = tokens[index + 1];
+                res = string.Format("function {0} ({1})", secondToken.Lexeme, Context.Instance.Translations.Pop());
                 res += " {";
                 if (Context.Instance.BlocskOpen > 0)
                 {
@@ -68,8 +68,8 @@ namespace MagicCompiler.MatLab
             if (production.ToString() == "inifuncion ::= function [ parametros ] = id ( seqid )")
             {
                 int firstSymbolIndex = tokens.FindLastIndex(token => token.IsSymbol(Context.symbol_id));
-                res = string.Format("function [{2}] = {1} ({0})", Context.Instance.Translations.Pop(), tokens[firstSymbolIndex].Lexeme, Context.Instance.Translations.Pop());
-                res += " {";
+                res = string.Format("function {1} ({0})", Context.Instance.Translations.Pop(), tokens[firstSymbolIndex].Lexeme) + " {";
+                string returnValue = Context.Instance.Translations.Pop();
                 if (Context.Instance.BlocskOpen > 0)
                 {
                     temp = Context.Instance.Translations.Pop() + Environment.NewLine;
@@ -80,6 +80,8 @@ namespace MagicCompiler.MatLab
                 }
                 Context.Instance.Translations.Push(temp + res);
                 Context.Instance.BlocskOpen++;
+                FuncCount++;
+                ReturnBlocks.Add(new Tuple<int, string>(FuncCount, string.Format("return [{0}];", returnValue)));
             }
             if (production.ToString() == "funcion ::= inifuncion seqsentencias end")
             {
@@ -88,9 +90,19 @@ namespace MagicCompiler.MatLab
                 {
                     res += Context.Instance.BlockTranslation.Dequeue() + Environment.NewLine;
                 }
+                
+                // Check if needs return
+                if (ReturnBlocks.Exists(funcBlock => funcBlock.Item1 == FuncCount))
+                {
+                    var returnData = ReturnBlocks.Find(funBlock => funBlock.Item1 == FuncCount);
+                    res += returnData.Item2 + Environment.NewLine;
+                    ReturnBlocks.Remove(returnData);
+                }
+
                 res += "}" + Environment.NewLine;
                 Context.Instance.Translations.Push(res);
                 Context.Instance.BlocskOpen--;
+                FuncCount--;
             }
             return res;
         }

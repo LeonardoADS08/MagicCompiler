@@ -2,34 +2,31 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using MagicCompiler.Grammar;
+using MagicCompiler.Grammars;
 using MagicCompiler.Structures.Grammar;
 
 namespace MagicCompiler.Automaton
 {
-    internal class AutomatonBuilder
+    internal class AutomatonBuilderLR
     {
         public State InitialState;
-        public CFG KGrammar;
 
+        private IGrammar _grammar;
         private List<Item> _productionItems;
-        private Production _startingProduction;
 
-        private List<Item> NonKernelItems => _productionItems.Where(x => x.DotPosition == 0 && x.Production != _startingProduction).ToList();
-        private List<Item> KernelItems => _productionItems.Where(x => x.DotPosition != 0 || x.Production == _startingProduction).ToList();
+        private List<Item> NonKernelItems => _productionItems.Where(x => x.DotPosition == 0 && x.Production != _grammar.AugmentedGrammar).ToList();
+        private List<Item> KernelItems => _productionItems.Where(x => x.DotPosition != 0 || x.Production == _grammar.AugmentedGrammar).ToList();
 
-        public AutomatonBuilder()
+        public AutomatonBuilderLR(IGrammar grammar)
         {
+            _grammar = grammar;
             _productionItems = new List<Item>();
-            Reader reader = new Reader();
-            KGrammar = CFG.Instance;
         }
 
         public void Build()
         {
-            ExtendGrammar();
-            KGrammar.Productions.ForEach(x => ComputeItems(x));
-            var spItem = _productionItems.FindAll(x => x.Production == _startingProduction && x.DotPosition == 0).ToList();
+            _grammar.Productions.ForEach(x => ComputeItems(x));
+            var spItem = _productionItems.FindAll(x => x.Production == _grammar.AugmentedGrammar && x.DotPosition == 0).ToList();
             InitialState = BuildStates(spItem, new List<State>());
             int order = 0;
             BFS(x =>
@@ -37,12 +34,6 @@ namespace MagicCompiler.Automaton
                 x.Order = order;
                 order++;
             });
-        }
-
-        private void ExtendGrammar()
-        {
-            _startingProduction = KGrammar.Configuration.AugmentedGrammar;
-            KGrammar.ExtendGrammar();
         }
 
         private void ComputeItems(Production production)

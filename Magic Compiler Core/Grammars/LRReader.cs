@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MagicCompiler.Grammar
+namespace MagicCompiler.Grammars
 {
     /*
         El formato de las reglas debería tener la forma:
@@ -36,7 +36,7 @@ namespace MagicCompiler.Grammar
 
         Cualquier otra forma sera digno de un error :)
     */
-    internal class Reader
+    internal class LRReader
     {
         private string FILE_DIRECTION_GRAMMAR_RULES => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/grammar_rules.txt");
         private string FILE_DIRECTION_GRAMMAR_CONFIGURATIONS => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data/grammar_config.json");
@@ -48,7 +48,7 @@ namespace MagicCompiler.Grammar
         private const string INLINE_RULE_SEPARATOR = "@@";
         private const string COMMENT_SYMBOL = "#";
 
-        public Reader()
+        public LRReader()
         {
             using (var reader = new StreamReader(FILE_DIRECTION_GRAMMAR_RULES))
             {
@@ -68,10 +68,9 @@ namespace MagicCompiler.Grammar
             } 
         }
 
-        public CFG Build()
+        public void Build(LRGrammar grammar)
         {
-            var cfg = new CFG();
-            cfg.Configuration = new CFGConfig() 
+            grammar.Configuration = new CFGConfig() 
             { 
                 AugmentedGrammar = StringToRule((string)_config.AugmentedGrammar)[0], 
                 Epsilon = _config.EpsilonSymbol
@@ -79,9 +78,8 @@ namespace MagicCompiler.Grammar
 
             for (int i = 0; i < _rawRules.Count; i++)
             {
-                cfg.Productions.AddRange(StringToRule(_rawRules[i]));
+                grammar.Productions.AddRange(StringToRule(_rawRules[i]));
             }
-            return cfg;
         }
 
         private List<Production> StringToRule(string rule)

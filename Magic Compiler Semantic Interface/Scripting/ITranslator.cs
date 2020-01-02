@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MagicCompiler
+namespace MagicCompiler.Scripting
 {
     public interface ITranslator
     {

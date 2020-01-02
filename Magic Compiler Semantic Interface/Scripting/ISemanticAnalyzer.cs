@@ -3,7 +3,7 @@ using MagicCompiler.Structures.Lexical;
 using System;
 using System.Collections.Generic;
 
-namespace MagicCompiler.Semantic.Interfaces
+namespace MagicCompiler.Scripting
 {
 
     public interface ISemanticAnalyzer

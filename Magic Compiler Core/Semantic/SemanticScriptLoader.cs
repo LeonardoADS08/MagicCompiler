@@ -1,4 +1,4 @@
-﻿using MagicCompiler.Semantic.Interfaces;
+﻿using MagicCompiler.Scripting;
 using MagicCompiler.Tools;
 using System;
 using System.Collections.Generic;

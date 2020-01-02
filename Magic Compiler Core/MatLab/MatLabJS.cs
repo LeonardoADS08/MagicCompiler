@@ -4,7 +4,7 @@
  * ISemanticValidation = Common interface for validations
  */
 
-using MagicCompiler.Semantic.Interfaces;
+using MagicCompiler.Scripting;
 using MagicCompiler.Structures.Grammar;
 using MagicCompiler.Structures.Lexical;
 using System;
@@ -107,7 +107,7 @@ namespace MagicCompiler.MatLab
             if (_translations.ContainsKey(production))
             {
                 string code = _translations[production].Translate(tokens, reduceProduction);
-                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine(code);
                 Console.ResetColor();
                 
