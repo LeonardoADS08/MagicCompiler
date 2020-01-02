@@ -8,21 +8,19 @@ namespace MagicCompiler.Structures.Lexical
     {
         public string Type { get; set; }
         public string Pattern { get; set; }
-        public string TSymbol { get; set; }
 
-        public Symbol(string type, string pattern, string tsymbol)
+        public Symbol(string type, string pattern)
         {
             Type = type;
             Pattern = pattern;
-            TSymbol = tsymbol;
         }
 
-        public override string ToString() => TSymbol;
+        public override string ToString() => Type;
 
         #region Tests
         public void PrintSymbol(bool newLine = false)
         {
-            string text = string.Format("{0} - {1} - {2}" , Type, Pattern, TSymbol);
+            string text = string.Format("{0} - {1}" , Type, Pattern);
             if (newLine) Console.WriteLine(text);
             else Console.Write(text);
         }

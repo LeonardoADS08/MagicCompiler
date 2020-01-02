@@ -23,7 +23,6 @@ namespace MagicCompiler.Syntactic
 
         public StateParser StateParser(State state) => Find(x => x.State == state);
 
-
         #region Tests
         public void PrintTable()
         {

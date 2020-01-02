@@ -7,7 +7,7 @@ namespace MagicCompiler.Structures.Lexical
 {
     public struct Token
     {
-        private readonly static Token _nullInstance = new Token("[NULL]", new Symbol(INVALID_TYPE, "[NULL]", "[NULL]"));
+        private readonly static Token _nullInstance = new Token("[NULL]", new Symbol(INVALID_TYPE, "[NULL]"));
         public static Token NULL_TOKEN => _nullInstance;
 
         public const string INVALID_TYPE = "INVALID";
@@ -25,11 +25,11 @@ namespace MagicCompiler.Structures.Lexical
         public bool IsSymbol(params string[] symbol)
         {
             for (int i = 0; i < symbol.Length; i++)
-                if (symbol[i] == Symbol.TSymbol) return true;
+                if (symbol[i] == Symbol.Type) return true;
             return false;
         }
 
-        public override string ToString() => Lexeme + " - " + Symbol.TSymbol;
+        public override string ToString() => Lexeme + " - " + Symbol.Type;
 
         #region Tests
         public void PrintToken()
@@ -41,7 +41,7 @@ namespace MagicCompiler.Structures.Lexical
 
         public void PrintTokenForParser()
         {
-            Console.WriteLine("{0} -> {1}", Lexeme, Symbol.TSymbol);
+            Console.WriteLine("{0} -> {1}", Lexeme, Symbol.Type);
         }
         #endregion
     }

@@ -31,9 +31,8 @@ namespace MagicCompiler.Syntactic
         private bool _error = false;
         public LRParser(ILexer lexer, IGrammar grammar) : base(lexer, grammar)
         {
-            //var semanticScriptLoader = new SemanticScriptLoader();
-            //if (semanticScriptLoader.Assembly == null)
-            if (false)
+            var scriptLoader = new GenericScriptLoader();
+            if (scriptLoader.Assembly == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Errors on scripts, can't continue...");
@@ -42,10 +41,8 @@ namespace MagicCompiler.Syntactic
             }
             else
             {
-                //_semanticAnalyzer = semanticScriptLoader.GetSemanticAnalyzer();
-                var instance = new MatLab.MatLabJS();
-                _semanticAnalyzer = instance;
-                _translator = instance;
+                _semanticAnalyzer = scriptLoader.GetSemanticAnalyzer();
+                _translator = scriptLoader.GetTranslator();
 
                 _parsingTable = new ParsingTable(grammar);
             }
@@ -74,11 +71,11 @@ namespace MagicCompiler.Syntactic
                 if (DEBUG_PARSER_STACK) DebugStack(stateStack);
 
                 // Action
-                if (state.Action.ContainsKey(token.Symbol.TSymbol))
+                if (state.Action.ContainsKey(token.Symbol.Type))
                 {
                     if (DEBUG_PARSER_TOKEN) DebugToken(token);
 
-                    var action = state.Action[token.Symbol.TSymbol];
+                    var action = state.Action[token.Symbol.Type];
                     switch (action.Type)
                     {
                         case ActionType.Shift:
@@ -159,7 +156,7 @@ namespace MagicCompiler.Syntactic
                 else // Unknown symbol, error
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("Unknonwn symbol '{0}', error!", token.Symbol.TSymbol);
+                    Console.WriteLine("Unknonwn symbol '{0}', error!", token.Symbol.Type);
                     Console.ResetColor();
                     finish = true;
                 }

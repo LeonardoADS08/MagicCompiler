@@ -1,4 +1,5 @@
 ﻿using MagicCompiler.Structures.Grammar;
+using MagicCompiler.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,22 +51,12 @@ namespace MagicCompiler.Grammars
 
         public LRReader()
         {
-            using (var reader = new StreamReader(FILE_DIRECTION_GRAMMAR_RULES))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-                    if (!line.StartsWith(COMMENT_SYMBOL) && !string.IsNullOrWhiteSpace(line))
-                        _rawRules.Add(line.Trim().ToLower());
+            Reader reader = new Reader(FILE_DIRECTION_GRAMMAR_RULES);
+            _rawRules = reader.ReadLines(t => t.Trim().ToLower());
 
-                }
-            }
-
-            using (var reader = new StreamReader(FILE_DIRECTION_GRAMMAR_CONFIGURATIONS))
-            {
-                string config = reader.ReadToEnd().Trim();
-                _config = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(config);
-            } 
+            reader.FileDirection = FILE_DIRECTION_GRAMMAR_CONFIGURATIONS;
+            string config = reader.ReadAll();
+            _config = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(config);
         }
 
         public void Build(LRGrammar grammar)

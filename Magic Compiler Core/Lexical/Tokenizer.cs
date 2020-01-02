@@ -1,7 +1,9 @@
 ﻿using MagicCompiler.Structures.Lexical;
+using MagicCompiler.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -23,36 +25,21 @@ namespace MagicCompiler.Lexical
             _reservedWords = new List<Symbol>();
             _regex = new List<Symbol>();
 
-            using (var reader = new StreamReader(FILE_DIRECTION_KEYWORDS))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string input = reader.ReadLine().Trim().ToLower();
-                    _reservedWords.Add(new Symbol("Keyword", input, input));
-                }
-            }
+            Reader reader = new Reader(FILE_DIRECTION_KEYWORDS);
+            _reservedWords.AddRange(reader.ReadLines(t => t.Trim().ToLower())
+                                          .Select(symbol => new Symbol(symbol, symbol)));
 
-            using (var reader = new StreamReader(FILE_DIRECTION_OPERATORS))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string input = reader.ReadLine().Trim().ToLower();
-                    _reservedWords.Add(new Symbol("Operator", input, input));
-                }
-            }
+            reader.FileDirection = FILE_DIRECTION_OPERATORS;
+            _reservedWords.AddRange(reader.ReadLines(t => t.Trim().ToLower())
+                                          .Select(symbol => new Symbol(symbol, symbol)));
 
-            using (var reader = new StreamReader(FILE_DIRECTION_REGEX))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine().ToLower();
-                    var rawSymbol = line.Split('-', 2);
-                    if (rawSymbol.Length == 2)
-                    {
-                        _regex.Add(new Symbol(rawSymbol[0].Trim(), rawSymbol[1].Trim(), rawSymbol[0].Trim()));
-                    }
-                }
-            }
+            reader.FileDirection = FILE_DIRECTION_REGEX;
+            _regex.AddRange(reader.ReadLines(t => t.Trim().ToLower())
+                                  .Select(symbol =>
+                                  {
+                                      var rawSymbol = symbol.Split('-', 2);
+                                      return new Symbol(rawSymbol[0].Trim(), rawSymbol[1].Trim());
+                                  }));
         }
 
         public TokenizerAnswer MatchToken(string word)

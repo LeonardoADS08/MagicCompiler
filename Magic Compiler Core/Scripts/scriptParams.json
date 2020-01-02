@@ -1,0 +1,6 @@
+{
+  "DefaultClass": "MagicCompiler.MatLab.MatLabJS",
+  "Translator": "true",
+  "References": [],
+  "Scripts": []
+}

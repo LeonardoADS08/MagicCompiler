@@ -53,7 +53,7 @@ namespace MagicCompiler.Lexical
             }
 
             var acceptedProduction = _grammar.AugmentedGrammar;
-            Tokens.Add(new Token(acceptedProduction.Left, new Symbol("Acceptation symbol", acceptedProduction.Left, acceptedProduction.Left)));
+            Tokens.Add(new Token(acceptedProduction.Left, new Symbol(acceptedProduction.Left, acceptedProduction.Left)));
         }
     }
 }
