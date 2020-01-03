@@ -21,7 +21,7 @@ namespace MagicCompiler.Lexical
 
         public abstract void Analyze();
 
-        public Token Next()
+        public virtual Token Next()
         {
             if (_nextIterator + 1 < Tokens.Count)
             {
@@ -32,6 +32,6 @@ namespace MagicCompiler.Lexical
             else return Tokens[_nextIterator];
         }
 
-        public void Reset() => _nextIterator = 0;
+        public virtual void Reset() => _nextIterator = 0;
     }
 }

@@ -8,7 +8,7 @@ namespace MagicCompiler.Grammars
     public abstract class Grammar : IGrammar
     {
         public abstract List<Production> Productions { get; }
-        public abstract Production AugmentedGrammar { get; }
+        public abstract Production AugmentedProduction { get; }
 
         protected List<string> _terminals;
         protected List<string> _nonTerminals;

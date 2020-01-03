@@ -10,7 +10,6 @@ namespace MagicCompiler.Lexical
     public class LexerMC : Lexer
     {
         private string _input;
-
         public override List<Token> Tokens => _tokens;
         private List<Token> _tokens = new List<Token>();
         private IGrammar _grammar;
@@ -52,7 +51,7 @@ namespace MagicCompiler.Lexical
                 word = string.Empty;
             }
 
-            var acceptedProduction = _grammar.AugmentedGrammar;
+            var acceptedProduction = _grammar.AugmentedProduction;
             Tokens.Add(new Token(acceptedProduction.Left, new Symbol(acceptedProduction.Left, acceptedProduction.Left)));
         }
     }

@@ -13,7 +13,7 @@ namespace MagicCompiler.Grammars
             SIMBOLO_NO_TERMINAL ::= SIMBOLO
 
         ó (forma 2)
-            SIMBOLO_NO_TERMINAL ::= SIMBOLO_1 | SIMBOLO_2 | ... | SIMBOLO_N
+            SIMBOLO_NO_TERMINAL ::= SIMBOLO_1 @@ SIMBOLO_2 @@ ... @@ SIMBOLO_N
 
         Los simbolos son un conjunto de caracteres, por ejemplo la siguiente producción:
                 
@@ -63,7 +63,7 @@ namespace MagicCompiler.Grammars
         {
             grammar.Configuration = new CFGConfig() 
             { 
-                AugmentedGrammar = StringToRule((string)_config.AugmentedGrammar)[0], 
+                AugmentedProduction = StringToRule((string)_config.AugmentedProduction)[0], 
                 Epsilon = _config.EpsilonSymbol
             };
 

@@ -14,8 +14,8 @@ namespace MagicCompiler.Automaton
         private IGrammar _grammar;
         private List<Item> _productionItems;
 
-        private List<Item> NonKernelItems => _productionItems.Where(x => x.DotPosition == 0 && x.Production != _grammar.AugmentedGrammar).ToList();
-        private List<Item> KernelItems => _productionItems.Where(x => x.DotPosition != 0 || x.Production == _grammar.AugmentedGrammar).ToList();
+        private List<Item> _nonKernelItems => _productionItems.Where(x => x.DotPosition == 0 && x.Production != _grammar.AugmentedProduction).ToList();
+        private List<Item> _kernelItems => _productionItems.Where(x => x.DotPosition != 0 || x.Production == _grammar.AugmentedProduction).ToList();
 
         public AutomatonBuilderLR(IGrammar grammar)
         {
@@ -26,7 +26,7 @@ namespace MagicCompiler.Automaton
         public void Build()
         {
             _grammar.Productions.ForEach(x => ComputeItems(x));
-            var spItem = _productionItems.FindAll(x => x.Production == _grammar.AugmentedGrammar && x.DotPosition == 0).ToList();
+            var spItem = _productionItems.FindAll(x => x.Production == _grammar.AugmentedProduction && x.DotPosition == 0).ToList();
             InitialState = BuildStates(spItem, new List<State>());
             int order = 0;
             BFS(x =>
@@ -54,7 +54,7 @@ namespace MagicCompiler.Automaton
         {
             List<Item> result = new List<Item>(),
                        analyzableItems = new List<Item>() { item },
-                       nonKernelItems = NonKernelItems;
+                       nonKernelItems = _nonKernelItems;
             HashSet<string> analyzedSymbols = new HashSet<string>();
 
             while (analyzableItems.Count != 0)
@@ -92,13 +92,6 @@ namespace MagicCompiler.Automaton
             items.ForEach(x => result.AddRange(_productionItems.Where(y => y.Production == x.Production && x.DotPosition + 1 == y.DotPosition)));
             return result;
         }
-        
-        // Devuelve los items validos para un simbolo dado
-        private List<Item> NextStateValidItems(string symbol, List<Item> productions)
-        {
-            productions.RemoveAll(x => x.DotPosition >= x.Production.Right.Count || x.DotPosition == 0);
-            return productions.Where(x => x.Production.Right[x.DotPosition - 1] == symbol).ToList();
-        }
 
         private Dictionary<string, List<Item>> GroupGoto(List<Item> items)
         {
@@ -123,16 +116,6 @@ namespace MagicCompiler.Automaton
 
             keysToDelete.ForEach(x => result.Remove(x));
             return result;
-        }
-
-        private State ExistState(List<Item> items, List<State> states)
-        {
-            foreach (var val in states)
-            {
-                val.CurrentItems.TrueForAll(x => items.Contains(x));
-                return val;
-            }
-            return null;
         }
 
         private State BuildStates(List<Item> currentItems, List<State> states)
@@ -210,7 +193,7 @@ namespace MagicCompiler.Automaton
 
         public void ClosureTest()
         {
-            KernelItems.ForEach(y =>
+            _kernelItems.ForEach(y =>
             {
                 Console.WriteLine("Closure of: ");
                 y.PrintItem();

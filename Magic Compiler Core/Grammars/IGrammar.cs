@@ -7,7 +7,7 @@ namespace MagicCompiler.Grammars
 {
     public interface IGrammar
     {
-        Production AugmentedGrammar { get; }
+        Production AugmentedProduction { get; }
         List<Production> Productions { get; }
 
         List<string> Terminals { get; }

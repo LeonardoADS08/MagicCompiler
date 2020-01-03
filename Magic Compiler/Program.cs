@@ -14,7 +14,7 @@ namespace Magic_Compiler
             var tokenizer = new Tokenizer();
             var lexer = new LexerMC(grammar, tokenizer);
             var parser = new LRParser(lexer, grammar);
-            var Compiler = new MagicCompiler.Compiler(lexer, parser);
+            var Compiler = new Compiler(lexer, parser);
             Compiler.Compile();
         }
     }

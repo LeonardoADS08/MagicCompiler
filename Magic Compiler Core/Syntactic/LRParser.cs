@@ -3,8 +3,8 @@ using MagicCompiler.Grammars;
 using MagicCompiler.Lexical;
 using MagicCompiler.Properties;
 using MagicCompiler.Scripting;
-using MagicCompiler.Semantic;
 using MagicCompiler.Structures.Lexical;
+using MagicCompiler.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace MagicCompiler.Syntactic
         private ParsingTable _parsingTable;
         private ISemanticAnalyzer _semanticAnalyzer;
         private ITranslator _translator;
+        private bool _error = false;
 
         public bool DEBUG => bool.Parse(Resources.Debug);
         public bool DEBUG_TABLE => DEBUG && bool.Parse(Resources.Debug_Table);
@@ -27,8 +28,6 @@ namespace MagicCompiler.Syntactic
         public bool DEBUG_SEMANTIC => DEBUG && bool.Parse(Resources.Debug_Semantic);
         public bool SEMANTIC_STOPS_PARSER => DEBUG && bool.Parse(Resources.SemanticErrorStopsParser);
 
-
-        private bool _error = false;
         public LRParser(ILexer lexer, IGrammar grammar) : base(lexer, grammar)
         {
             var scriptLoader = new GenericScriptLoader();

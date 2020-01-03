@@ -39,7 +39,7 @@ namespace MagicCompiler.Syntactic
             state.CurrentItems.ForEach(item =>
             {
                 // ACCEPT!
-                if (item.Production == grammar.AugmentedGrammar && item.DotPosition >= item.Production.Right.Count)
+                if (item.Production == grammar.AugmentedProduction && item.DotPosition >= item.Production.Right.Count)
                 {
                     Action.Add(item.Production.Left, new Action()
                     {
@@ -69,7 +69,7 @@ namespace MagicCompiler.Syntactic
             });
 
             var terminalsAndAccepted = new List<string>(grammar.Terminals);
-            terminalsAndAccepted.Add(grammar.AugmentedGrammar.Left);
+            terminalsAndAccepted.Add(grammar.AugmentedProduction.Left);
             terminalsAndAccepted.ForEach(symbol =>
             {
                 if (!Action.ContainsKey(symbol))

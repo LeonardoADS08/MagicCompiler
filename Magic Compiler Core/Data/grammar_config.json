@@ -1,4 +1,4 @@
 ﻿{
-  "AugmentedGrammar": "$accepted ::= programa",
+  "AugmentedProduction": "$accepted ::= programa",
   "EpsilonSymbol": "epsilon"
 }

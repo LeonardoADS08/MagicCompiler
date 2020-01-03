@@ -6,11 +6,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace MagicCompiler.Semantic
+namespace MagicCompiler.Tools
 {
     public class GenericScriptLoader : ScriptLoader
     {
         protected override string SCRIPT_PARAMS => Path.Combine(ScriptEngine.FILE_DIRECTION_SCRIPTS, "scriptParams.json");
+       
         private object _assemblyInstance;
         public GenericScriptLoader() : base() { }
 

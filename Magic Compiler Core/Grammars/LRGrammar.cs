@@ -19,7 +19,7 @@ namespace MagicCompiler.Grammars
         public List<Production> _productions;
 
         public override List<Production> Productions => _productions;
-        public override Production AugmentedGrammar => Configuration.AugmentedGrammar;
+        public override Production AugmentedProduction => Configuration.AugmentedProduction;
 
 
         public LRGrammar()
@@ -32,8 +32,8 @@ namespace MagicCompiler.Grammars
 
         public void ExtendGrammar()
         {
-            if (!Productions.Contains(Configuration.AugmentedGrammar))
-                Productions.Add(Configuration.AugmentedGrammar);
+            if (!Productions.Contains(Configuration.AugmentedProduction))
+                Productions.Add(Configuration.AugmentedProduction);
         }
 
         protected override void CategorizeSymbols()
@@ -42,7 +42,7 @@ namespace MagicCompiler.Grammars
 
             HashSet<string> nonTerminalsHashSet = new HashSet<string>();
             HashSet<string> symbols = new HashSet<string>();
-            
+
             Productions.ForEach(production =>
             {
                 symbols.Add(production.Left);
@@ -111,7 +111,7 @@ namespace MagicCompiler.Grammars
             }
 
             // Accepted grammar doesn't have epsilon
-            if (production == Configuration.AugmentedGrammar)
+            if (production == Configuration.AugmentedProduction)
             {
                 result.RemoveAll(x => x == Configuration.Epsilon);
             }
@@ -147,8 +147,8 @@ namespace MagicCompiler.Grammars
             List<string> result = new List<string>();
 
             // case 1
-            if (actualProduction == Configuration.AugmentedGrammar) 
-                result.Add(Configuration.AugmentedGrammar.Left);
+            if (actualProduction == Configuration.AugmentedProduction) 
+                result.Add(Configuration.AugmentedProduction.Left);
 
             var productionsWith = Productions.Where(x => x.Right.Contains(actualProduction.Left)).ToList();
             productionsWith.RemoveAll(p => p.Right[0] == Configuration.Epsilon);
